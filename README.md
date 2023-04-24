@@ -1,6 +1,10 @@
-## snow-vim
->my customized nvim setup on the top of lazy-vim and lazy-nvim package manager 
-<p align="center">
-    <img src="https://github.com/cybergaz/void_repo/blob/master/screenshots/1679995950.png" alt="ss" width="100%">
-</p>
+# 💤 LazyVim
 
+A starter template for [LazyVim](https://github.com/LazyVim/LazyVim).
+Refer to the [documentation](https://lazyvim.github.io/installation) to get started.
+
+
+
+error solution : 
+  edit file ".local/share/nvim/lazy/Lazy/LazyVim/lua/lazyvim/config/init.lua"
+  and comment out line 8-11  ( whole tokyonight theme function)
