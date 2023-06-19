@@ -1,5 +1,7 @@
 # ❄️ SnowVim
 
+<!["lmao no image!!!"]("https://github.com/cybergaz/void_repo/blob/master/screenshots/1679995950.png") 
+
 > you'll get an error after setting-up this configuration
 
 > error solution :      
