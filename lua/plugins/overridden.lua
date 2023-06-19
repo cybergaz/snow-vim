@@ -351,7 +351,7 @@ return {
         -- colors.editor.bg_alt       = "#090B10"
         -- colors.editor.fg           = "#A6ACCD"
         colors.editor.selection = "#355586"
-        colors.syntax.comments = "#464B5D"
+        colors.syntax.comments = "#748585"
         colors.editor.contrast = "#090B10"
         colors.editor.active = "#1A1C25"
         colors.editor.border = "#232637"

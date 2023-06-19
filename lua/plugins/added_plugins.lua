@@ -18,4 +18,7 @@ return {
   {
     "marko-cerovac/material.nvim",
   },
+  -- {
+  --   "zbirenbaum/copilot.lua",
+  -- },
 }
