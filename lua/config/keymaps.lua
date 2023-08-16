@@ -75,4 +75,7 @@ keymap.set({ "n", "v" }, "mm", ":'<,'>norm ")
 keymap.set("n", "==", ":lua vim.lsp.buf.format()<CR>")
 --
 -- -- save and sudo mode save
--- -- keymap.set("n",":W",":w !sudo tee % /dev/null")
+-- keymap.set("n", "<c-s>", ":w !sudo tee % /dev/null")
+
+-- keymap.set("n", "<CR>", "ciw")
+keymap.set("n", "<BS>", 'ci"')

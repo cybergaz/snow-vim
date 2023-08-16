@@ -278,7 +278,7 @@ return {
   },
 
   ----------------------------------------------------------------------------------------------------------------------------
-  --  material theme setup
+  --  material theme setup ( customized )
   ----------------------------------------------------------------------------------------------------------------------------
   {
     "marko-cerovac/material.nvim",
@@ -349,16 +349,16 @@ return {
       custom_colors = function(colors)
         -- colors.editor.bg = "#0F111A"
         -- colors.editor.bg_alt       = "#090B10"
-        -- colors.editor.fg           = "#A6ACCD"
+        colors.editor.fg = "#d0e0f0"
         colors.editor.selection = "#355586"
-        colors.syntax.comments = "#748585"
+        colors.syntax.comments = "#60606f"
         colors.editor.contrast = "#090B10"
         colors.editor.active = "#1A1C25"
-        colors.editor.border = "#232637"
+        colors.editor.border = "#121222"
         colors.editor.line_numbers = "#3B3F51"
         colors.editor.highlight = "#1F2233"
         colors.editor.disabled = "#464B5D"
-        colors.editor.accent = "#246AF3"
+        colors.editor.accent = "#2552FF"
 
         colors.syntax.string = "#00FFA3"
         colors.syntax.variable = colors.editor.fg
@@ -366,13 +366,13 @@ return {
         colors.syntax.keyword = "#F7525F"
         colors.syntax.value = "#F06B57"
         colors.syntax.operator = "#e32283"
-        colors.syntax.type = "#09b3a4"
-        colors.syntax.fn = "#4ae8db"
+        colors.syntax.type = "#08AFA3"
+        colors.syntax.fn = "#5feff0"
 
-        colors.main.blue = "#1169F1"
+        colors.main.blue = "#2552FF"
         colors.main.cyan = "#4B9BE5"
         colors.main.green = "#00FFA3"
-        colors.main.yellow = "#31AFCD"
+        colors.main.yellow = "#30a0c0"
         colors.main.red = "#E53935"
         colors.main.paleblue = "#8796B0"
         colors.main.purple = "#464B5D"
@@ -417,4 +417,8 @@ return {
       }, -- Overwrite highlights with your own
     }),
   },
+
+  ----------------------------------------------------------------------------------------------------------------------------
+  -- rust tools
+  ----------------------------------------------------------------------------------------------------------------------------
 }
