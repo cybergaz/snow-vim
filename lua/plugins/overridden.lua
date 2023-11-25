@@ -107,6 +107,7 @@ return {
       { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find Files" },
       { "<leader>fe", "<cmd>Telescope file_browser<cr>", desc = "File browser" },
       { "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Live grep" },
+      { "<leader>fm", "<cmd>Telescope marks<cr>", desc = "marks" },
     },
     require("telescope").setup({
       extensions = {
@@ -115,9 +116,7 @@ return {
           -- disables netrw and use telescope-file-browser in its place
           hijack_netrw = true,
           mappings = {
-            ["i"] = {
-              -- your custom insert mode mappings
-            },
+            ["i"] = {},
             ["n"] = {
               -- your custom normal mode mappings
             },
@@ -149,27 +148,21 @@ return {
     event = "VeryLazy",
     opts = function()
       local icons = require("lazyvim.config").icons
-
-      local function fg(name)
-        return function()
-          ---@type {foreground?:number}?
-          ---@diagnostic disable-next-line: undefined-field
-          local hl = vim.api.nvim_get_hl_by_name(name, true)
-          return hl and hl.foreground and { fg = string.format("#%06x", hl.foreground) }
-        end
-      end
+      local Util = require("lazyvim.util")
 
       return {
         options = {
           theme = "auto",
           -- background_colour = "transparent",
           component_separators = { left = "", right = "" },
-          section_separators = { left = "", right = "" },
+          -- section_separators = { left = "", right = "" },
+          section_separators = { left = "█", right = "█" },
           globalstatus = true,
-          disabled_filetypes = { statusline = { "dashboard", "lazy", "alpha" } },
+          disabled_filetypes = { statusline = { "dashboard", "alpha" } },
         },
         sections = {
-          lualine_a = { "mode" },
+          -- lualine_a = { { "mode", separator = { left = "", right = "" }, padding = 1 } },
+          lualine_a = { { "mode", separator = { left = "", right = "" }, padding = 1 } },
           lualine_b = {
             {
               "filetype",
@@ -194,31 +187,41 @@ return {
               },
             },
             -- stylua: ignore
-            -- {
-            --   function() return require("nvim-navic").get_location() end,
-            --   cond = function() return package.loaded["nvim-navic"] and require("nvim-navic").is_available() end,
-            -- },
+            {
+              function() return require("nvim-navic").get_location() end,
+              cond = function() return package.loaded["nvim-navic"] and require("nvim-navic").is_available() end,
+            },
           },
           lualine_x = {
-                        -- stylua: ignore
-                        {
-                            function() return require("noice").api.status.command.get() end,
-                            cond = function()
-                                return package.loaded["noice"] and
-                                    require("noice").api.status.command.has()
-                            end,
-                            color = fg("Statement")
-                        },
-                        -- stylua: ignore
-                        {
-                            function() return require("noice").api.status.mode.get() end,
-                            cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
-                            color = fg("Constant"),
-                        },
+            -- stylua: ignore
+            {
+                function() return require("noice").api.status.command.get() end,
+                cond = function()
+                    return package.loaded["noice"] and
+                        require("noice").api.status.command.has()
+                end,
+                color = Util.fg("Statement")
+            },
+            -- stylua: ignore
+            {
+                function() return require("noice").api.status.mode.get() end,
+                cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
+                color = Util.fg("Constant"),
+            },
+            -- stylua: ignore
+            -- {
+            --   function()
+            --     return "  " .. require("dap").status()
+            --   end,
+            --   cond = function()
+            --     return package.loaded["dap"] and require("dap").status() ~= ""
+            --   end,
+            --   color = Util.fg("Debug"),
+            -- },
             {
               require("lazy.status").updates,
               cond = require("lazy.status").has_updates,
-              color = fg("Special"),
+              color = Util.fg("Special"),
             },
             {
               "diff",
@@ -230,16 +233,17 @@ return {
             },
           },
           lualine_y = {
-            -- { "location", padding = { left = 0, right = 1 } },
+            { "location", padding = { left = 0, right = 1 } },
           },
           lualine_z = {
-            { "progress", separator = " ", padding = { left = 1, right = 1 } },
+            -- { "progress", separator = { left = "", right = "" }, padding = { left = 1, right = 0 } },
+            { "progress", separator = { left = "", right = "█" }, padding = { left = 1, right = 0 } },
             -- function()
             --   return " " .. os.date("%R")
             -- end,
           },
         },
-        extensions = { "neo-tree" },
+        extensions = { "neo-tree", "lazy" },
       }
     end,
   },
