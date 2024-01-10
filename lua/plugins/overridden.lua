@@ -12,9 +12,10 @@ return {
   },
 
   ----------------------------------------------------------------------------------------------------------------------------
-  -- overrdding default tab button action
+  -- nvim-cmp - overrdding default tab button action
   ----------------------------------------------------------------------------------------------------------------------------
   {
+    -- this luasnip block is necessary to work with TAB and to disable nvim-cmp irritating TAB warps (up until this version)
     "L3MON4D3/LuaSnip",
     keys = function()
       return {}
@@ -22,52 +23,90 @@ return {
   },
   {
     "hrsh7th/nvim-cmp",
+    version = false, -- last release is way too old
+    event = "InsertEnter",
     dependencies = {
-      "hrsh7th/cmp-emoji",
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-path",
+      "saadparwaiz1/cmp_luasnip",
     },
-    ---@param opts cmp.ConfigSchema
-    opts = function(_, opts)
-      local has_words_before = function()
-        unpack = unpack or table.unpack
-        local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-        return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-      end
-
-      local luasnip = require("luasnip")
+    opts = function()
+      vim.api.nvim_set_hl(0, "CmpGhostText", { link = "Comment", default = true })
+      vim.api.nvim_set_hl(0, "CmpNormal", { bg = "#18202b" })
+      vim.api.nvim_set_hl(0, "BorderBG", { bg = "#035B78" })
+      vim.api.nvim_set_hl(0, "CursorLineSel", { bg = "#4B4F5C" })
+      vim.api.nvim_set_hl(0, "CmpDocNormal", { bg = "#0C1219" })
       local cmp = require("cmp")
-
-      opts.mapping = vim.tbl_extend("force", opts.mapping, {
-        ["<Tab>"] = cmp.mapping(function(fallback)
-          if cmp.visible() then
-            cmp.select_next_item()
-            -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
-            -- they way you will only jump inside the snippet region
-          elseif luasnip.expand_or_jumpable() then
-            luasnip.expand_or_jump()
-          elseif has_words_before() then
-            cmp.complete()
-          else
+      local defaults = require("cmp.config.default")()
+      return {
+        completion = {
+          completeopt = "menu,menuone,noinsert",
+        },
+        snippet = {
+          expand = function(args)
+            require("luasnip").lsp_expand(args.body)
+          end,
+        },
+        window = {
+          -- completion = cmp.config.window.bordered(),
+          -- documentation = cmp.config.window.bordered(),
+          completion = {
+            -- border = "rounded",
+            winhighlight = "Normal:CmpNormal,FloatBorder:BorderBG,CursorLine:CursorLineSel",
+            -- side_padding = 0,
+          },
+          documentation = {
+            winhighlight = "Normal:CmpDocNormal",
+          },
+        },
+        mapping = cmp.mapping.preset.insert({
+          ["<Tab>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+          ["<S-Tab>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
+          ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+          ["<C-f>"] = cmp.mapping.scroll_docs(4),
+          ["<C-Space>"] = cmp.mapping.complete(),
+          ["<C-e>"] = cmp.mapping.abort(),
+          ["<CR>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+          ["<S-CR>"] = cmp.mapping.confirm({
+            behavior = cmp.ConfirmBehavior.Replace,
+            select = true,
+          }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+          ["<C-CR>"] = function(fallback)
+            cmp.abort()
             fallback()
-          end
-        end, { "i", "s" }),
-        ["<S-Tab>"] = cmp.mapping(function(fallback)
-          if cmp.visible() then
-            cmp.select_prev_item()
-          elseif luasnip.jumpable(-1) then
-            luasnip.jump(-1)
-          else
-            fallback()
-          end
-        end, { "i", "s" }),
-      })
-
-      -- cmp.setup({
-      --   window = {
-      --     completion = cmp.config.window.bordered(),
-      --     documentation = cmp.config.window.bordered(),
-      --     -- documentation = cmp.config.disable,
-      --   },
-      -- })
+          end,
+        }),
+        sources = cmp.config.sources({
+          { name = "nvim_lsp" },
+          { name = "luasnip" },
+          { name = "path" },
+        }, {
+          { name = "buffer" },
+        }),
+        formatting = {
+          format = function(_, item)
+            local icons = require("lazyvim.config").icons.kinds
+            if icons[item.kind] then
+              item.kind = icons[item.kind] .. item.kind
+            end
+            return item
+          end,
+        },
+        experimental = {
+          ghost_text = {
+            hl_group = "CmpGhostText",
+          },
+        },
+        sorting = defaults.sorting,
+      }
+    end,
+    ---@param opts cmp.ConfigSchema
+    config = function(_, opts)
+      for _, source in ipairs(opts.sources) do
+        source.group_index = source.group_index or 1
+      end
+      require("cmp").setup(opts)
     end,
   },
 
@@ -105,7 +144,7 @@ return {
       { "<leader>ss", false },
       { "<leader>sS", false },
       { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find Files" },
-      { "<leader>fe", "<cmd>Telescope file_browser<cr>", desc = "File browser" },
+      -- { "<leader>fe", "<cmd>Telescope file_browser<cr>", desc = "File browser" },
       { "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Live grep" },
       { "<leader>fm", "<cmd>Telescope marks<cr>", desc = "marks" },
     },
@@ -124,7 +163,7 @@ return {
         },
       },
     }),
-    require("telescope").load_extension("file_browser"),
+    -- require("telescope").load_extension("file_browser"),
   },
 
   ----------------------------------------------------------------------------------------------------------------------------
@@ -135,9 +174,9 @@ return {
     opts = {
       timeout = 2000,
     },
-    require("notify").setup({
-      background_colour = "#000000",
-    }),
+    -- require("notify").setup({
+    --   background_colour = "#000000",
+    -- }),
   },
 
   ----------------------------------------------------------------------------------------------------------------------------
@@ -173,7 +212,7 @@ return {
                 right = 0,
               },
             },
-            { "filename", path = 0, symbols = { modified = "  ", readonly = "", unnamed = "" } },
+            { "filename", path = 1, symbols = { modified = "🖹", readonly = " 🛇 ", unnamed = "" } },
           },
           lualine_c = {
             "branch",
@@ -200,13 +239,13 @@ return {
                     return package.loaded["noice"] and
                         require("noice").api.status.command.has()
                 end,
-                color = Util.fg("Statement")
+                color = Util.ui.fg("Statement")
             },
             -- stylua: ignore
             {
                 function() return require("noice").api.status.mode.get() end,
                 cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
-                color = Util.fg("Constant"),
+                color = Util.ui.fg("Constant"),
             },
             -- stylua: ignore
             -- {
@@ -216,12 +255,12 @@ return {
             --   cond = function()
             --     return package.loaded["dap"] and require("dap").status() ~= ""
             --   end,
-            --   color = Util.fg("Debug"),
+            --   color = Util.ui.fg("Debug"),
             -- },
             {
               require("lazy.status").updates,
               cond = require("lazy.status").has_updates,
-              color = Util.fg("Special"),
+              color = Util.ui.fg("Special"),
             },
             {
               "diff",
@@ -237,7 +276,7 @@ return {
           },
           lualine_z = {
             -- { "progress", separator = { left = "", right = "" }, padding = { left = 1, right = 0 } },
-            { "progress", separator = { left = "", right = "█" }, padding = { left = 1, right = 0 } },
+            { "progress", separator = { left = "", right = "" }, padding = { left = 1, right = 1 } },
             -- function()
             --   return " " .. os.date("%R")
             -- end,
@@ -251,161 +290,152 @@ return {
   ----------------------------------------------------------------------------------------------------------------------------
   -- alpha nvim ( logo )
   ----------------------------------------------------------------------------------------------------------------------------
+  --   {
+  --     "goolord/alpha-nvim",
+  --     event = "VimEnter",
+  --     opts = function()
+  --       local dashboard = require("alpha.themes.dashboard")
+  --       local logo = [[
+  -- ________                        ___    ______
+  -- __  ___/_______________      __ __ |  / /__(_)______ ___
+  -- _____ \__  __ \  __ \_ | /| / / __ | / /__  /__  __ `__ \
+  -- ____/ /_  / / / /_/ /_ |/ |/ /  __ |/ / _  / _  / / / / /
+  -- /____/ /_/ /_/\____/____/|__/   _____/  /_/  /_/ /_/ /_/
+  --       ]]
+  --       dashboard.section.header.val = vim.split(logo, "\n")
+  --     end,
+  --   },
+
+  ----------------------------------------------------------------------------------------------------------------------------
+  -- dashboard
+  ----------------------------------------------------------------------------------------------------------------------------
   {
-    "goolord/alpha-nvim",
+    "nvimdev/dashboard-nvim",
     event = "VimEnter",
     opts = function()
-      local dashboard = require("alpha.themes.dashboard")
       local logo = [[
-                                                    _
-                                                   (_)
-     .--.   _ .--.   .--.   _   _   __     _   __  __   _ .--..--.
-    ( (`\] [ `.-. |/ .'`\ \[ \ [ \ [  ]   [ \ [  ][  | [ `.-. .-. |
-     `'.'.  | | | || \__. | \ \/\ \/ /     \ \/ /  | |  | | | | | |
-    [\__) )[___||__]'.__.'   \__/\__/       \__/  [___][___||__||__]
-      ]]
-      dashboard.section.header.val = vim.split(logo, "\n")
+ ,---.                               ,--.   ,--.,--.          
+'   .-' ,--,--,  ,---. ,--.   ,--.    \  `.'  / `--',--,--,--.
+`.  `-. |      \| .-. ||  |.'.|  |     \     /  ,--.|        |
+.-'    ||  ||  |' '-' '|   .'.   |      \   /   |  ||  |  |  |
+`-----' `--''--' `---' '--'   '--'       `-'    `--'`--`--`--'
+    ]]
+
+      logo = string.rep("\n", 8) .. logo .. "\n\n"
+
+      local opts = {
+        theme = "doom",
+        hide = {
+          -- this is taken care of by lualine
+          -- enabling this messes up the actual laststatus setting after loading a file
+          statusline = false,
+        },
+        config = {
+          header = vim.split(logo, "\n"),
+        -- stylua: ignore
+        center = {
+          { action = "Telescope find_files",                                     desc = " Find file",       icon = " ", key = "f" },
+          { action = "ene | startinsert",                                        desc = " New file",        icon = " ", key = "n" },
+          { action = "Telescope oldfiles",                                       desc = " Recent files",    icon = " ", key = "r" },
+          { action = "Telescope live_grep",                                      desc = " Find text",       icon = " ", key = "g" },
+          { action = [[lua require("lazyvim.util").telescope.config_files()()]], desc = " Config",          icon = " ", key = "c" },
+          { action = 'lua require("persistence").load()',                        desc = " Restore Session", icon = " ", key = "s" },
+          { action = "LazyExtras",                                               desc = " Lazy Extras",     icon = " ", key = "x" },
+          { action = "Lazy",                                                     desc = " Lazy",            icon = "󰒲 ", key = "l" },
+          { action = "qa",                                                       desc = " Quit",            icon = " ", key = "q" },
+        },
+          footer = function()
+            local stats = require("lazy").stats()
+            local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
+            return { "⚡ Neovim loaded " .. stats.loaded .. "/" .. stats.count .. " plugins in " .. ms .. "ms" }
+          end,
+        },
+      }
+
+      for _, button in ipairs(opts.config.center) do
+        button.desc = button.desc .. string.rep(" ", 43 - #button.desc)
+        button.key_format = "  %s"
+      end
+
+      -- close Lazy and re-open when the dashboard is ready
+      if vim.o.filetype == "lazy" then
+        vim.cmd.close()
+        vim.api.nvim_create_autocmd("User", {
+          pattern = "DashboardLoaded",
+          callback = function()
+            require("lazy").show()
+          end,
+        })
+      end
+
+      return opts
     end,
   },
 
   ----------------------------------------------------------------------------------------------------------------------------
-  --  material theme setup ( customized )
+  -- bufferline
   ----------------------------------------------------------------------------------------------------------------------------
-  -- {
-  --   "marko-cerovac/material.nvim",
-  --   init = function()
-  --     vim.g.material_style = "deep ocean"
-  --   end,
-  --   config = function()
-  --     vim.cmd("colorscheme material")
-  --   end,
-  --   require("material").setup({
-  --     contrast = {
-  --       terminal = false, -- Enable contrast for the built-in terminal
-  --       sidebars = false, -- Enable contrast for sidebar-like windows ( for example Nvim-Tree )
-  --       floating_windows = true, -- Enable contrast for floating windows
-  --       cursor_line = true, -- Enable darker background for the cursor line
-  --       non_current_windows = false, -- Enable darker background for non-current windows
-  --       filetypes = {}, -- Specify which filetypes get the contrasted (darker) background
-  --     },
-  --     styles = {
-  --       -- Give comments style such as bold, italic, underline etc.
-  --       comments = { italic = true },
-  --       strings = { --[[ bold = true ]]
-  --       },
-  --       keywords = { --[[ underline = true ]]
-  --       },
-  --       functions = {
-  --         bold = true, --[[, undercurl = true ]]
-  --       },
-  --       variables = {},
-  --       operators = {},
-  --       types = {},
-  --     },
-  --     plugins = { -- Uncomment the plugins that you use to highlight them
-  --       -- Available plugins:
-  --       -- "dap",
-  --       -- "dashboard",
-  --       -- "gitsigns",
-  --       -- "hop",
-  --       -- "indent-blankline",
-  --       -- "lspsaga",
-  --       -- "mini",
-  --       -- "neogit",
-  --       -- "nvim-cmp",
-  --       -- "nvim-navic",
-  --       -- "nvim-tree",
-  --       -- "nvim-web-devicons",
-  --       -- "sneak",
-  --       -- "telescope",
-  --       -- "trouble",
-  --       -- "which-key",
-  --     },
-  --     disable = {
-  --       colored_cursor = true, -- Disable the colored cursor
-  --       borders = false, -- Disable borders between verticaly split windows
-  --       background = true, -- Prevent the theme from setting the background (NeoVim then uses your terminal background)
-  --       term_colors = false, -- Prevent the theme from setting terminal colors
-  --       eob_lines = false, -- Hide the end-of-buffer lines
-  --     },
-  --     high_visibility = {
-  --       lighter = false, -- Enable higher contrast text for lighter style
-  --       darker = true, -- Enable higher contrast text for darker style
-  --     },
-  --     lualine_style = "stealth", -- Lualine style ( can be stealth or default )
-  --     async_loading = true, -- Load parts of the theme asyncronously for faster startup (turned on by default)
-  --     --
-  --     -- To see the available colors, locate lua/material/colors/init.lua
-  --     --
-  --     custom_colors = function(colors)
-  --       -- colors.editor.bg = "#0F111A"
-  --       -- colors.editor.bg_alt       = "#090B10"
-  --       colors.editor.fg = "#d0e0f0"
-  --       colors.editor.selection = "#355586"
-  --       colors.syntax.comments = "#60606f"
-  --       colors.editor.contrast = "#090B10"
-  --       colors.editor.active = "#1A1C25"
-  --       colors.editor.border = "#121222"
-  --       colors.editor.line_numbers = "#3B3F51"
-  --       colors.editor.highlight = "#1F2233"
-  --       colors.editor.disabled = "#464B5D"
-  --       colors.editor.accent = "#2552FF"
-  --
-  --       colors.syntax.string = "#00FF93"
-  --       colors.syntax.variable = colors.editor.fg
-  --       colors.syntax.field = colors.editor.fg
-  --       colors.syntax.keyword = "#4B9BE5"
-  --       colors.syntax.value = "#F76D47"
-  --       colors.syntax.operator = "#2050d0"
-  --       colors.syntax.type = "#08AFA3"
-  --       colors.syntax.fn = "#2fdfAf"
-  --
-  --       colors.main.blue = "#2552FF"
-  --       colors.main.cyan = "#4B9BE5"
-  --       colors.main.green = "#00FFA3"
-  --       colors.main.yellow = "#30a0c0"
-  --       colors.main.red = "#E53935"
-  --       colors.main.paleblue = "#8796B0"
-  --       colors.main.purple = "#464B5D"
-  --       colors.main.orange = "#F76D47"
-  --       colors.main.pink = "#FF5370"
-  --
-  --       ---git colors
-  --       colors.git.added = colors.main.green
-  --       colors.git.removed = colors.main.red
-  --       colors.git.modified = colors.main.blue
-  --
-  --       ---lsp colors
-  --       colors.lsp.warning = colors.main.yellow
-  --       colors.lsp.info = colors.main.paleblue
-  --       colors.lsp.hint = colors.main.purple
-  --
-  --       ---contrasted backgrounds
-  --       -- colors.backgrounds.sidebars = colors.editor.bg
-  --       -- colors.backgrounds.floating_windows = colors.editor.bg
-  --       -- colors.backgrounds.non_current_windows = colors.editor.bg
-  --       -- colors.backgrounds.cursor_line = colors.editor.active
-  --     end,
-  --     custom_highlights = {
-  --       -- LineNr = { bg = "#FF0001" },
-  --       -- CursorLine = { fg = "#ffffff", underline = true },
-  --
-  --       -- This is a list of possible values
-  --       -- YourHighlightGroup = {
-  --       --     fg = "#SOME_COLOR", -- foreground color
-  --       --     bg = "#SOME_COLOR", -- background color
-  --       --     sp = "#SOME_COLOR", -- special color (for colored underlines, undercurls...)
-  --       --     bold = false, -- make group bold
-  --       --     italic = false, -- make group italic
-  --       --     underline = false, -- make group underlined
-  --       --     undercurl = false, -- make group undercurled
-  --       --     underdot = false, -- make group underdotted
-  --       --     underdash = false, -- make group underslashed
-  --       --     striketrough = false, -- make group striked trough
-  --       --     reverse = false, -- reverse the fg and bg colors
-  --       --     link = "SomeOtherGroup" -- link to some other highlight group
-  --       -- }
-  --     }, -- Overwrite highlights with your own
-  --   }),
-  -- },
+
+  {
+    "akinsho/bufferline.nvim",
+    event = "VeryLazy",
+    keys = {
+      { "<leader>bp", "<Cmd>BufferLineTogglePin<CR>", desc = "Toggle pin" },
+      { "<leader>bP", "<Cmd>BufferLineGroupClose ungrouped<CR>", desc = "Delete non-pinned buffers" },
+      { "<leader>bo", "<Cmd>BufferLineCloseOthers<CR>", desc = "Delete other buffers" },
+      { "<leader>br", "<Cmd>BufferLineCloseRight<CR>", desc = "Delete buffers to the right" },
+      { "<leader>bl", "<Cmd>BufferLineCloseLeft<CR>", desc = "Delete buffers to the left" },
+      { "<S-h>", false },
+      { "<S-l>", false },
+      { "[b", false },
+      { "]b", false },
+    },
+    opts = {
+      options = {
+      -- stylua: ignore
+      close_command = function(n) require("mini.bufremove").delete(n, false) end,
+      -- stylua: ignore
+      right_mouse_command = function(n) require("mini.bufremove").delete(n, false) end,
+        diagnostics = "nvim_lsp",
+        always_show_bufferline = false,
+        diagnostics_indicator = function(_, _, diag)
+          local icons = require("lazyvim.config").icons.diagnostics
+          local ret = (diag.error and icons.Error .. diag.error .. " " or "")
+            .. (diag.warning and icons.Warn .. diag.warning or "")
+          return vim.trim(ret)
+        end,
+        offsets = {
+          {
+            filetype = "neo-tree",
+            text = "Neo-tree",
+            highlight = "Directory",
+            text_align = "left",
+          },
+        },
+      },
+    },
+    config = function(_, opts)
+      require("bufferline").setup(opts)
+      -- Fix bufferline when restoring a session
+      vim.api.nvim_create_autocmd("BufAdd", {
+        callback = function()
+          vim.schedule(function()
+            pcall(nvim_bufferline)
+          end)
+        end,
+      })
+    end,
+  },
+
+  ----------------------------------------------------------------------------------------------------------------------------
+  -- noice ui
+  ----------------------------------------------------------------------------------------------------------------------------
+  {
+    "folke/noice.nvim",
+    opts = function(_, opts)
+      -- for borders around pop-ups
+      opts.presets.lsp_doc_border = true
+      opts.presets.bottom_search = false
+    end,
+  },
 }

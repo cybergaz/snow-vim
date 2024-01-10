@@ -10,18 +10,15 @@ return {
   ---------------------------------------------------------------------------------------------------
   -- telescope file explorer
   ---------------------------------------------------------------------------------------------------
-  {
-    "nvim-telescope/telescope-file-browser.nvim",
-    dependencies = { "nvim-telescope/telescope.nvim" },
-    --
-    -- a few keybinds to remember :
-    -- Alt+c --> create file
-    -- Alt+r --> rename
-    -- Alt+d --> delete
-    -- Ctrl+h --> toggle hidden
-  },
   -- {
-  --   "marko-cerovac/material.nvim",
+  --   "nvim-telescope/telescope-file-browser.nvim",
+  --   dependencies = { "nvim-telescope/telescope.nvim" },
+  --   --
+  --   -- a few keybinds to remember :
+  --   -- Alt+c --> create file
+  --   -- Alt+r --> rename
+  --   -- Alt+d --> delete
+  --   -- Ctrl+h --> toggle hidden
   -- },
 
   ---------------------------------------------------------------------------------------------------
@@ -143,5 +140,56 @@ return {
     -- require("rust-tools").setup({
     --   --
     -- }),
+  },
+
+  ---------------------------------------------------------------------------------------------------
+  -- nvim navic (for representing in which block you're in right now)
+  ---------------------------------------------------------------------------------------------------
+  {
+    "SmiteshP/nvim-navic",
+    lazy = true,
+    init = function()
+      vim.g.navic_silence = true
+      require("lazyvim.util").lsp.on_attach(function(client, buffer)
+        if client.supports_method("textDocument/documentSymbol") then
+          require("nvim-navic").attach(client, buffer)
+        end
+      end)
+    end,
+    opts = function()
+      return {
+        separator = " ",
+        highlight = true,
+        depth_limit = 5,
+        icons = require("lazyvim.config").icons.kinds,
+        lazy_update_context = true,
+      }
+    end,
+  },
+
+  ---------------------------------------------------------------------------------------------------
+  -- harpoon file navigation
+  ---------------------------------------------------------------------------------------------------
+  {
+    "ThePrimeagen/harpoon",
+    lazy = false,
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+    config = true,
+    keys = {
+      { "<leader>a", "<cmd>lua require('harpoon.mark').add_file()<cr>", desc = "Mark file with harpoon" },
+      { "<leader>ha", "<cmd>lua require('harpoon.mark').add_file()<cr>", desc = "Mark file with harpoon" },
+      { "<leader>hr", "<cmd>lua require('harpoon.mark').rm_file()<cr>", desc = "Remove harpoon marks" },
+      { "<S-l>", "<cmd>lua require('harpoon.ui').nav_next()<cr>", desc = "Go to next harpoon mark" },
+      -- { "<C-l>", "<cmd>lua require('harpoon.ui').nav_next()<cr>", desc = "Go to next harpoon mark" },
+      { "<S-h>", "<cmd>lua require('harpoon.ui').nav_prev()<cr>", desc = "Go to previous harpoon mark" },
+      { "<leader>hh", "<cmd>lua require('harpoon.ui').toggle_quick_menu()<cr>", desc = "Show harpoon marks" },
+      { "<leader>h1", "<cmd>lua require('harpoon.ui').nav_file(1)<cr>", desc = "harpoon file 1" },
+      { "<leader>h2", "<cmd>lua require('harpoon.ui').nav_file(2)<cr>", desc = "harpoon file 2" },
+      { "<leader>h3", "<cmd>lua require('harpoon.ui').nav_file(3)<cr>", desc = "harpoon file 3" },
+      { "<leader>h4", "<cmd>lua require('harpoon.ui').nav_file(4)<cr>", desc = "harpoon file 4" },
+      { "<leader>h5", "<cmd>lua require('harpoon.ui').nav_file(5)<cr>", desc = "harpoon file 5" },
+    },
   },
 }

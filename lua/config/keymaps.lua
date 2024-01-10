@@ -44,3 +44,18 @@ keymap.set("n", "==", ":lua vim.lsp.buf.format()<CR>")
 
 -- keymap.set("n", "<CR>", "ciw")
 keymap.set("n", "<BS>", 'ci"')
+
+-- moving through buffers
+keymap.set("n", "<A-h>", "<cmd> bprev<cr>")
+keymap.set("n", "<A-l>", "<cmd> bnext<cr>")
+
+-- lazy term (floating terminal)
+local Util = require("lazyvim.util")
+local lazyterm = function()
+  Util.terminal(nil, { cwd = Util.root() })
+end
+local map = Util.safe_keymap_set
+map("n", "<leader>tt", lazyterm, { desc = "Terminal (root dir)" })
+map("n", "<leader>T", function()
+  Util.terminal()
+end, { desc = "Terminal (cwd)" })

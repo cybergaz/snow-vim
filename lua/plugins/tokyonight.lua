@@ -105,7 +105,8 @@ return {
         local none = "NONE"
 
         hl.boolean = {
-          fg = "#f76d47",
+          -- fg = "#f76d47",
+          fg = "#E32283",
           style = {},
         }
         hl.Constant = {
@@ -124,7 +125,8 @@ return {
         --   fg = "#0000ff",
         -- }
         hl.number = {
-          fg = "#ff6f4f",
+          -- fg = "#f76d47",
+          fg = "#E32283",
           style = {},
         }
 
@@ -183,12 +185,13 @@ return {
         hl.FlashLabel = {
           bg = none,
           bold = true,
-          fg = "#00ff70",
+          italic = true,
+          fg = "#ff3689",
         }
 
         hl.FloatBorder = {
           bg = none,
-          fg = "#101020",
+          fg = "#035B78",
         }
 
         hl.IncSearch = {
