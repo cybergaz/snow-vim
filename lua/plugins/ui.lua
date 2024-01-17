@@ -1,174 +1,22 @@
+-- every spec file under the "plugins" directory will be loaded automatically by lazy.nvim
+
 return {
-  ----------------------------------------------------------------------------------------------------------------------------
-  -- neo tree annoying keymaps disabled
-  ----------------------------------------------------------------------------------------------------------------------------
+
+  ----------------------------------------------------------------------------------------
+  -- noice ui
+  ----------------------------------------------------------------------------------------
   {
-    "nvim-neo-tree/neo-tree.nvim",
-    keys = function()
-      return {
-        { "<leader>ee", "<cmd>Neotree float<cr>", desc = "neo tree float" },
-      }
+    "folke/noice.nvim",
+    opts = function(_, opts)
+      -- for borders around pop-ups
+      opts.presets.lsp_doc_border = true
+      opts.presets.bottom_search = false
     end,
   },
 
-  ----------------------------------------------------------------------------------------------------------------------------
-  -- nvim-cmp - overrdding default tab button action
-  ----------------------------------------------------------------------------------------------------------------------------
-  {
-    -- this luasnip block is necessary to work with TAB and to disable nvim-cmp irritating TAB warps (up until this version)
-    "L3MON4D3/LuaSnip",
-    keys = function()
-      return {}
-    end,
-  },
-  {
-    "hrsh7th/nvim-cmp",
-    version = false, -- last release is way too old
-    event = "InsertEnter",
-    dependencies = {
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp-path",
-      "saadparwaiz1/cmp_luasnip",
-    },
-    opts = function()
-      vim.api.nvim_set_hl(0, "CmpGhostText", { link = "Comment", default = true })
-      vim.api.nvim_set_hl(0, "CmpNormal", { bg = "#18202b" })
-      vim.api.nvim_set_hl(0, "BorderBG", { bg = "#035B78" })
-      vim.api.nvim_set_hl(0, "CursorLineSel", { bg = "#4B4F5C" })
-      vim.api.nvim_set_hl(0, "CmpDocNormal", { bg = "#0C1219" })
-      local cmp = require("cmp")
-      local defaults = require("cmp.config.default")()
-      return {
-        completion = {
-          completeopt = "menu,menuone,noinsert",
-        },
-        snippet = {
-          expand = function(args)
-            require("luasnip").lsp_expand(args.body)
-          end,
-        },
-        window = {
-          -- completion = cmp.config.window.bordered(),
-          -- documentation = cmp.config.window.bordered(),
-          completion = {
-            -- border = "rounded",
-            winhighlight = "Normal:CmpNormal,FloatBorder:BorderBG,CursorLine:CursorLineSel",
-            -- side_padding = 0,
-          },
-          documentation = {
-            winhighlight = "Normal:CmpDocNormal",
-          },
-        },
-        mapping = cmp.mapping.preset.insert({
-          ["<Tab>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
-          ["<S-Tab>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
-          ["<C-b>"] = cmp.mapping.scroll_docs(-4),
-          ["<C-f>"] = cmp.mapping.scroll_docs(4),
-          ["<C-Space>"] = cmp.mapping.complete(),
-          ["<C-e>"] = cmp.mapping.abort(),
-          ["<CR>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-          ["<S-CR>"] = cmp.mapping.confirm({
-            behavior = cmp.ConfirmBehavior.Replace,
-            select = true,
-          }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-          ["<C-CR>"] = function(fallback)
-            cmp.abort()
-            fallback()
-          end,
-        }),
-        sources = cmp.config.sources({
-          { name = "nvim_lsp" },
-          { name = "luasnip" },
-          { name = "path" },
-        }, {
-          { name = "buffer" },
-        }),
-        formatting = {
-          format = function(_, item)
-            local icons = require("lazyvim.config").icons.kinds
-            if icons[item.kind] then
-              item.kind = icons[item.kind] .. item.kind
-            end
-            return item
-          end,
-        },
-        experimental = {
-          ghost_text = {
-            hl_group = "CmpGhostText",
-          },
-        },
-        sorting = defaults.sorting,
-      }
-    end,
-    ---@param opts cmp.ConfigSchema
-    config = function(_, opts)
-      for _, source in ipairs(opts.sources) do
-        source.group_index = source.group_index or 1
-      end
-      require("cmp").setup(opts)
-    end,
-  },
-
-  ----------------------------------------------------------------------------------------------------------------------------
-  -- telescope fixation
-  ----------------------------------------------------------------------------------------------------------------------------
-  {
-    "nvim-telescope/telescope.nvim",
-    keys = {
-      { "<leader>/", false },
-      { "<leader>:", false },
-      { "<leader><space>", false },
-      { "<leader>fb", false },
-      { "<leader>fr", false },
-      { "<leader>gc", false },
-      { "<leader>gs", false },
-      { "<leader>sa", false },
-      { "<leader>sb", false },
-      { "<leader>sb", false },
-      { "<leader>sc", false },
-      { "<leader>sC", false },
-      { "<leader>sd", false },
-      { "<leader>sg", false },
-      { "<leader>sG", false },
-      { "<leader>sh", false },
-      { "<leader>sH", false },
-      { "<leader>sk", false },
-      { "<leader>sM", false },
-      { "<leader>sm", false },
-      { "<leader>so", false },
-      { "<leader>sR", false },
-      { "<leader>sw", false },
-      { "<leader>sW", false },
-      { "<leader>uC", false },
-      { "<leader>ss", false },
-      { "<leader>sS", false },
-      { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find Files" },
-      -- { "<leader>fe", "<cmd>Telescope file_browser<cr>", desc = "File browser" },
-      { "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Live grep" },
-      { "<leader>fm", "<cmd>Telescope marks<cr>", desc = "marks" },
-    },
-    require("telescope").setup({
-      extensions = {
-        file_browser = {
-          -- theme = "ivy",
-          -- disables netrw and use telescope-file-browser in its place
-          hijack_netrw = true,
-          mappings = {
-            ["i"] = {},
-            ["n"] = {
-              -- your custom normal mode mappings
-            },
-          },
-        },
-      },
-    }),
-    -- require("telescope").load_extension("file_browser"),
-  },
-
-  ----------------------------------------------------------------------------------------------------------------------------
+  ----------------------------------------------------------------------------------------
   -- notify plugin screaming stop
-  ----------------------------------------------------------------------------------------------------------------------------
+  ----------------------------------------------------------------------------------------
   {
     "rcarriga/nvim-notify",
     opts = {
@@ -179,15 +27,21 @@ return {
     -- }),
   },
 
-  ----------------------------------------------------------------------------------------------------------------------------
+  ----------------------------------------------------------------------------------------
   -- lualine restructured
-  ----------------------------------------------------------------------------------------------------------------------------
+  ----------------------------------------------------------------------------------------
   {
     "nvim-lualine/lualine.nvim",
     event = "VeryLazy",
     opts = function()
       local icons = require("lazyvim.config").icons
       local Util = require("lazyvim.util")
+      local colors = {
+        [""] = Util.ui.fg("Special"),
+        ["Normal"] = Util.ui.fg("Special"),
+        ["Warning"] = Util.ui.fg("DiagnosticError"),
+        ["InProgress"] = Util.ui.fg("DiagnosticWarn"),
+      }
 
       return {
         options = {
@@ -262,6 +116,7 @@ return {
               cond = require("lazy.status").has_updates,
               color = Util.ui.fg("Special"),
             },
+
             {
               "diff",
               symbols = {
@@ -269,6 +124,31 @@ return {
                 modified = icons.git.modified,
                 removed = icons.git.removed,
               },
+            },
+            -- copilot icon
+            {
+              function()
+                local icon = icons.kinds.Copilot
+                local status = require("copilot.api").status.data
+                return icon .. (status.message or "")
+              end,
+              cond = function()
+                if not package.loaded["copilot"] then
+                  return
+                end
+                local ok, clients = pcall(require("lazyvim.util").lsp.get_clients, { name = "copilot", bufnr = 0 })
+                if not ok then
+                  return false
+                end
+                return ok and #clients > 0
+              end,
+              color = function()
+                if not package.loaded["copilot"] then
+                  return
+                end
+                local status = require("copilot.api").status.data
+                return colors[status.status] or colors[""]
+              end,
             },
           },
           lualine_y = {
@@ -287,32 +167,20 @@ return {
     end,
   },
 
-  ----------------------------------------------------------------------------------------------------------------------------
-  -- alpha nvim ( logo )
-  ----------------------------------------------------------------------------------------------------------------------------
-  --   {
-  --     "goolord/alpha-nvim",
-  --     event = "VimEnter",
-  --     opts = function()
-  --       local dashboard = require("alpha.themes.dashboard")
-  --       local logo = [[
-  -- ________                        ___    ______
-  -- __  ___/_______________      __ __ |  / /__(_)______ ___
-  -- _____ \__  __ \  __ \_ | /| / / __ | / /__  /__  __ `__ \
-  -- ____/ /_  / / / /_/ /_ |/ |/ /  __ |/ / _  / _  / / / / /
-  -- /____/ /_/ /_/\____/____/|__/   _____/  /_/  /_/ /_/ /_/
-  --       ]]
-  --       dashboard.section.header.val = vim.split(logo, "\n")
-  --     end,
-  --   },
-
-  ----------------------------------------------------------------------------------------------------------------------------
+  ----------------------------------------------------------------------------------------
   -- dashboard
-  ----------------------------------------------------------------------------------------------------------------------------
+  ----------------------------------------------------------------------------------------
   {
     "nvimdev/dashboard-nvim",
     event = "VimEnter",
     opts = function()
+      --       local logo = [[
+      -- ________                        ___    ______
+      -- __  ___/_______________      __ __ |  / /__(_)______ ___
+      -- _____ \__  __ \  __ \_ | /| / / __ | / /__  /__  __ `__ \
+      -- ____/ /_  / / / /_/ /_ |/ |/ /  __ |/ / _  / _  / / / / /
+      -- /____/ /_/ /_/\____/____/|__/   _____/  /_/  /_/ /_/ /_/
+      --       ]]
       local logo = [[
  ,---.                               ,--.   ,--.,--.          
 '   .-' ,--,--,  ,---. ,--.   ,--.    \  `.'  / `--',--,--,--.
@@ -372,9 +240,9 @@ return {
     end,
   },
 
-  ----------------------------------------------------------------------------------------------------------------------------
+  ----------------------------------------------------------------------------------------
   -- bufferline
-  ----------------------------------------------------------------------------------------------------------------------------
+  ----------------------------------------------------------------------------------------
 
   {
     "akinsho/bufferline.nvim",
@@ -427,15 +295,28 @@ return {
     end,
   },
 
-  ----------------------------------------------------------------------------------------------------------------------------
-  -- noice ui
-  ----------------------------------------------------------------------------------------------------------------------------
+  ----------------------------------------------------------------------------------------
+  -- nvim navic (for representing in which code block you're in right now)
+  ----------------------------------------------------------------------------------------
   {
-    "folke/noice.nvim",
-    opts = function(_, opts)
-      -- for borders around pop-ups
-      opts.presets.lsp_doc_border = true
-      opts.presets.bottom_search = false
+    "SmiteshP/nvim-navic",
+    lazy = true,
+    init = function()
+      vim.g.navic_silence = true
+      require("lazyvim.util").lsp.on_attach(function(client, buffer)
+        if client.supports_method("textDocument/documentSymbol") then
+          require("nvim-navic").attach(client, buffer)
+        end
+      end)
+    end,
+    opts = function()
+      return {
+        separator = " ",
+        highlight = true,
+        depth_limit = 5,
+        icons = require("lazyvim.config").icons.kinds,
+        lazy_update_context = true,
+      }
     end,
   },
 }
