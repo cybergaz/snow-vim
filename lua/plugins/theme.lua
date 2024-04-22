@@ -73,12 +73,14 @@ return {
         colors.blue6 = "#b4f9f8"
         colors.blue7 = "#394b70"
 
-        colors.cyan = "#7dcfff"
+        -- colors.cyan = "#7dcfff"
+        colors.cyan = "#6a8ede"
 
         colors.dark3 = "#545c7e"
         colors.dark5 = "#737aa2"
 
-        colors.green = "#00e08f"
+        -- colors.green = "#00e08f"
+        colors.green = "#27d696"
         colors.green1 = "#73daca"
         colors.green2 = "#41a6b5"
         colors.teal = "#1abc9c"
@@ -143,7 +145,8 @@ return {
         }
 
         hl.Comment = {
-          fg = "#60606f",
+          -- fg = "#60606f",
+          fg = "#4a5266",
           style = {
             italic = true,
           },
@@ -165,8 +168,9 @@ return {
         }
 
         hl.Function = {
-          fg = "#2fdfAf",
-          style = { bold = true },
+          -- fg = "#2fdfAf",
+          fg = "#73baf5",
+          style = { bold = true, italic = true },
         }
 
         -- hl.Hlargs = {
@@ -247,6 +251,36 @@ return {
           bold = true,
           fg = "#2552ff",
         }
+
+        -- Telescope colors --
+
+        -- hl.TelescopeNormal = {
+        --   bg = colors.bg_dark,
+        --   fg = colors.fg_dark,
+        -- }
+        -- hl.TelescopeBorder = {
+        --   bg = colors.bg_dark,
+        --   fg = colors.bg_dark,
+        -- }
+        hl.TelescopePromptNormal = {
+          bg = none,
+        }
+        hl.TelescopePromptBorder = {
+          bg = none,
+          fg = none,
+        }
+        hl.TelescopePromptTitle = {
+          bg = none,
+          fg = none,
+        }
+        -- hl.TelescopePreviewTitle = {
+        --   bg = colors.bg_dark,
+        --   fg = colors.bg_dark,
+        -- }
+        -- hl.TelescopeResultsTitle = {
+        --   bg = colors.bg_dark,
+        --   fg = colors.bg_dark,
+        -- }
       end,
       -- -----------------------------------------------------------------------------------
     },

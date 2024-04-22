@@ -20,13 +20,77 @@ return {
   ----------------------------------------------------------------------------------------
   -- nvim-cmp - overrdding default tab button action (now change selection with tab)
   ----------------------------------------------------------------------------------------
+  {
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
+    event = "InsertEnter",
+    config = function()
+      require("copilot").setup({
+        panel = {
+          enabled = true,
+          auto_refresh = false,
+          keymap = {
+            jump_prev = "[[",
+            jump_next = "]]",
+            accept = "<CR>",
+            refresh = "gr",
+            open = "<M-CR>",
+          },
+          layout = {
+            position = "bottom", -- | top | left | right
+            ratio = 0.4,
+          },
+        },
+        suggestion = {
+          enabled = true,
+          auto_trigger = false,
+          debounce = 75,
+          keymap = {
+            accept = "<M-l>",
+            accept_word = false,
+            accept_line = false,
+            next = "<M-]>",
+            prev = "<M-[>",
+            dismiss = "<C-]>",
+          },
+        },
+        filetypes = {
+          yaml = false,
+          markdown = false,
+          help = false,
+          gitcommit = false,
+          gitrebase = false,
+          hgcommit = false,
+          svn = false,
+          cvs = false,
+          ["."] = false,
+        },
+        copilot_node_command = "node", -- Node.js version must be > 18.x
+        server_opts_overrides = {},
+      })
+    end,
+  },
+
+  ----------------------------------------------------------------------------------------
+  -- nvim-cmp - overrdding default tab button action (now change selection with tab)
+  ----------------------------------------------------------------------------------------
   -- first: disable default <tab> and <s-tab> behavior in LuaSnip
   {
     "L3MON4D3/LuaSnip",
-    keys = function()
-      return {}
+    -- keys = function()
+    --   return {}
+    -- end,
+    opts = function(_)
+      vim.keymap.set(
+        { "n" },
+        "<space>jl",
+        "<cmd>lua require('luasnip').session.current_nodes[vim.api.nvim_get_current_buf()] = nil<cr>",
+        { desc = "clear jump list (luasnip)" },
+        { silent = true }
+      )
     end,
   },
+  -- second: override default <tab> and <s-tab> behavior in nvim-cmp
   {
     "hrsh7th/nvim-cmp",
     version = false, -- last release is way too old
@@ -37,13 +101,27 @@ return {
       "hrsh7th/cmp-path",
       "hrsh7th/cmp-emoji",
       "saadparwaiz1/cmp_luasnip",
+      ------------------------------------------------------------------------------------------------------
+      -- important: copilot cmp source must be loaded after copilot.lua to get the copilot working properly
+      {
+        "zbirenbaum/copilot-cmp",
+        dependencies = "copilot.lua",
+        opts = {},
+        config = function(_, opts)
+          local copilot_cmp = require("copilot_cmp")
+          copilot_cmp.setup(opts)
+          -- attach cmp source whenever copilot attaches
+          -- fixes lazy-loading issues with the copilot cmp source
+          require("lazyvim.util").lsp.on_attach(function(client)
+            if client.name == "copilot" then
+              copilot_cmp._on_insert_enter({})
+            end
+          end)
+        end,
+        -----------------------------------------------------------------------------------------------------
+      },
     },
     opts = function(_, opts)
-      table.insert(opts.sources, 1, {
-        name = "copilot",
-        group_index = 1,
-        priority = 100,
-      })
       table.insert(opts.sources, { name = "emoji" })
 
       ----------------------------------------------------------------------------------------
@@ -120,6 +198,15 @@ return {
     end,
     ---@param opts cmp.ConfigSchema
     config = function(_, opts)
+      ----------------------------------------------------------------------------------------
+      -- important block to put under config to get copilot working properly with cmp
+      --
+      table.insert(opts.sources, 1, {
+        name = "copilot",
+        group_index = 1,
+        priority = 100,
+      })
+      ----------------------------------------------------------------------------------------
       for _, source in ipairs(opts.sources) do
         source.group_index = source.group_index or 1
       end
@@ -132,6 +219,7 @@ return {
   ----------------------------------------------------------------------------------------
   {
     "simrat39/rust-tools.nvim",
+    ft = { "rust" },
     opts = function()
       return {
         tools = { -- rust-tools options
@@ -232,5 +320,39 @@ return {
     -- require("rust-tools").setup({
     --   --
     -- }),
+  },
+
+  ----------------------------------------------------------------------------------------
+  -- autopairs - automatically insert closing brackets, quotes, etc
+  ----------------------------------------------------------------------------------------
+  {
+    "windwp/nvim-autopairs",
+    event = "InsertEnter",
+    config = true,
+    -- use opts = {} for passing setup options
+    -- this is equalent to setup({}) function
+  },
+
+  ----------------------------------------------------------------------------------------
+  -- nvim comments
+  ----------------------------------------------------------------------------------------
+  {
+    "numToStr/Comment.nvim",
+    opts = function(_)
+      local comment_ft = require("Comment.ft")
+      comment_ft.set("kdl", { "//%s", "//%s" })
+
+      -- jsx/tsx files comment conflicts resolve
+      require("ts_context_commentstring").setup({
+        enable_autocmd = false,
+      })
+      require("Comment").setup({
+        pre_hook = require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook(),
+      })
+    end,
+    lazy = false,
+    dependencies = {
+      "JoosepAlviste/nvim-ts-context-commentstring",
+    },
   },
 }

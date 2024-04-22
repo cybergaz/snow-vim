@@ -8,6 +8,13 @@ return {
   {
     "folke/noice.nvim",
     opts = function(_, opts)
+      table.insert(opts.routes, {
+        filter = {
+          event = "notify",
+          find = "No information available",
+        },
+        opts = { skip = true },
+      })
       -- for borders around pop-ups
       opts.presets.lsp_doc_border = true
       opts.presets.bottom_search = false
@@ -48,6 +55,8 @@ return {
           theme = "auto",
           -- background_colour = "transparent",
           component_separators = { left = "", right = "" },
+          -- component_separators = { left = "", right = "" },
+          -- section_separators = { left = "", right = "" },
           -- section_separators = { left = "", right = "" },
           section_separators = { left = "█", right = "█" },
           globalstatus = true,
@@ -71,12 +80,11 @@ return {
           lualine_c = {
             "branch",
             {
-              "diagnostics",
+              "diff",
               symbols = {
-                error = icons.diagnostics.Error,
-                warn = icons.diagnostics.Warn,
-                info = icons.diagnostics.Info,
-                hint = icons.diagnostics.Hint,
+                added = icons.git.added,
+                modified = icons.git.modified,
+                removed = icons.git.removed,
               },
             },
             -- stylua: ignore
@@ -116,13 +124,14 @@ return {
               cond = require("lazy.status").has_updates,
               color = Util.ui.fg("Special"),
             },
-
+            --
             {
-              "diff",
+              "diagnostics",
               symbols = {
-                added = icons.git.added,
-                modified = icons.git.modified,
-                removed = icons.git.removed,
+                error = icons.diagnostics.Error,
+                warn = icons.diagnostics.Warn,
+                info = icons.diagnostics.Info,
+                hint = icons.diagnostics.Hint,
               },
             },
             -- copilot icon
