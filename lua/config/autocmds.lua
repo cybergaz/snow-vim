@@ -37,3 +37,6 @@ require("lspconfig").clangd.setup({
     "--offset-encoding=utf-16",
   },
 })
+
+-- disable copilot on startup because it's annoying
+vim.cmd(":Copilot disable")

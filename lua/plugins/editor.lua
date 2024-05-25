@@ -35,7 +35,8 @@ return {
       { "<leader>uC", false },
       { "<leader>ss", false },
       { "<leader>sS", false },
-      { "<leader>ff", "<cmd> Telescope find_files <cr>", desc = "Find Files" },
+      -- { "<leader>ff", "<cmd> Telescope find_files <cr>", desc = "Find Files" },
+      { "<leader>ff", false },
       { "<leader>fl", "<cmd> Telescope find_files <cr>", desc = "Find Files" },
       -- { "<leader>fe", "<cmd>Telescope file_browser<cr>", desc = "File browser" },
       { "<leader>fg", "<cmd> Telescope live_grep <cr>", desc = "Find Word (Live grep)" },
@@ -212,14 +213,35 @@ return {
   },
 
   ----------------------------------------------------------------------------------------
-  -- hex rgb colorcoding (highlight hex colors wherever used)
+  -- highlight hex rgb colors
   ----------------------------------------------------------------------------------------
   {
-    "norcalli/nvim-colorizer.lua",
-    cmd = { "ColorizerToggle", "ColorizerAttachToBuffer", "ColorizerReloadAllBuffers" },
+    "brenoprata10/nvim-highlight-colors",
+    cmd = { "HighlightColors" },
+    keys = {
+      {
+        "<leader>hc",
+        function()
+          require("nvim-highlight-colors").toggle()
+        end,
+        desc = "Toggle Highlight Colors",
+      },
+    },
+    config = function()
+      require("nvim-highlight-colors").setup({
+        render = "virtual", --'background'|'foreground'|'virtual'
+        -- virtual_symbol = "■",
+        virtual_symbol = "●",
+        enable_named_colors = true,
+        enable_tailwind = true,
+      })
+      require("nvim-highlight-colors").turnOff()
+    end,
   },
 
+  ----------------------------------------------------------------------------------------
   -- vim-flog : more visually appealing git log
+  ----------------------------------------------------------------------------------------
   {
     "rbong/vim-flog",
     lazy = true,
@@ -233,19 +255,21 @@ return {
   },
 
   ----------------------------------------------------------------------------------------
-  -- flash - jumping around with few keystrokes
+  -- leap - jumping around with few keystrokes
   ----------------------------------------------------------------------------------------
   {
-    "folke/flash.nvim",
-    event = "VeryLazy",
-    opts = {},
-  -- stylua: ignore
-  keys = {
-    { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
-    { "S", mode = { "n" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
-    { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
-    { "R", false },
-    { "<c-s>", false },
-  },
+    "ggandor/leap.nvim",
+    enabled = true,
+    keys = {
+      { "s", mode = { "n", "x", "o" }, desc = "Leap forward to" },
+      { "S", mode = { "n", "x", "o" }, desc = "Leap backward to" },
+      { "gs", mode = { "n", "x", "o" }, desc = "Leap from windows" },
+    },
+    config = function()
+      local leap = require("leap")
+      leap.add_default_mappings(false)
+      leap.opts.max_phase_one_targets = nil
+      leap.opts.highlight_unlabeled_phase_one_targets = false
+    end,
   },
 }

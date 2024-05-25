@@ -10,17 +10,19 @@ vim.g.mapleader = " "
 -- remmaping ESC for easier accesss
 ----------------------------------------------------------------
 keymap.set({ "i" }, "jk", "<ESC>", { silent = true })
-keymap.set({ "i" }, "kj", "<ESC>", { silent = true })
 ----------------------------------------------------------------
 
 -- do not yank with x and c
 ----------------------------------------------------------------
 keymap.set({ "n", "x" }, "x", '"_x')
+keymap.set({ "n" }, "X", '"_dd')
+keymap.set({ "x" }, "X", '"_X')
 keymap.set({ "n", "x" }, "c", '"_c')
 keymap.set({ "n", "x" }, "C", '"_C')
-keymap.set({ "x" }, "s", '"_d')
-keymap.set({ "n" }, "s", '"_d')
-keymap.set({ "n" }, "S", '"_S')
+-- keymap.set({ "x" }, "s", '"_d')
+-- keymap.set({ "n" }, "s", '"_d')
+-- keymap.set({ "n" }, "S", '"_S')
+keymap.set({ "n" }, "xl", '"_dd')
 ----------------------------------------------------------------
 
 -- select all
@@ -29,7 +31,10 @@ keymap.set({ "i", "n" }, "<C-a>", "<ESC>ggVG")
 ----------------------------------------------------------------
 
 -- find and replace
-keymap.set({ "n" }, "<leader>fr", ":%s/", { desc = "Find and replace in current file" })
+keymap.set({ "n" }, "?", ":%s/", { desc = "Find and replace in current file" })
+
+-- jumping between opening and closing of braces
+keymap.set({ "n", "x" }, "tp", "%", { desc = "teleport between braces" }, { silent = true })
 
 -- REDO with U
 ----------------------------------------------------------------
@@ -38,15 +43,15 @@ keymap.set("n", "U", "<C-r>", { silent = true })
 
 -- Write Out binds
 ----------------------------------------------------------------
-keymap.set("n", "<leader>wf", "<cmd> up <cr>", { silent = true })
-keymap.set("n", "<leader>wo", "<cmd> wqa <cr>", { silent = true })
+keymap.set("n", "<leader>wf", "<cmd> up <cr>", { desc = "update file only if changed" }, { silent = true })
+keymap.set("n", "<leader>wo", "<cmd> wqa <cr>", { desc = "write and quit all" }, { silent = true })
 keymap.set({ "n", "i" }, "<C-s>", "<cmd> wqa <cr>", { silent = true })
 ----------------------------------------------------------------
 
 -- Quit without saving
 ----------------------------------------------------------------
 keymap.set({ "n", "i" }, "<C-q>", "<cmd> qa! <cr>", { silent = true })
-keymap.set({ "n" }, "<leader>wn", "<cmd> qa! <cr>", { silent = true })
+keymap.set({ "n" }, "<leader>wn", "<cmd> qa! <cr>", { desc = "quit all without saving" }, { silent = true })
 ----------------------------------------------------------------
 
 -- operation on selected text
@@ -54,14 +59,14 @@ keymap.set({ "n" }, "<leader>wn", "<cmd> qa! <cr>", { silent = true })
 keymap.set({ "n", "v" }, "mm", ":'<,'>norm ")
 ----------------------------------------------------------------
 
--- save and sudo mode save
+-- sudo mode save
 ----------------------------------------------------------------
 -- keymap.set("n", "<c-s>", ":w !sudo tee % /dev/null")
 ----------------------------------------------------------------
 
 -- delete strings with backspace
 ----------------------------------------------------------------
-keymap.set("n", "<BS>", 'ci"')
+keymap.set("n", "<BS>", '"_ci"')
 -- keymap.set("n", "<CR>", "ciw")
 ----------------------------------------------------------------
 

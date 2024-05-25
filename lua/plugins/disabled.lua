@@ -5,7 +5,9 @@ return {
   { "folke/neodev.nvim", enabled = false },
   { "folke/neoconf.nvim", enabled = false },
   { "folke/flash.nvim", enabled = false },
-  -- { "folke/tokyonight.nvim", enabled = false },
+  { "folke/tokyonight.nvim", enabled = false },
+  -- { "folke/which-key.nvim", enabled = false },
+  { "catppuccin/nvim", enabled = false },
   { "nvim-treesitter/nvim-treesitter-context", enabled = false },
   -- { "akinsho/bufferline.nvim", enabled = false },
   -- { "folke/persistence.nvim", enabled = false },
@@ -14,4 +16,5 @@ return {
   { "echasnovski/mini.comment", enabled = false },
   -- { "numToStr/Comment.nvim", enabled = false },
   -- { "rcarriga/nvim-notify", enabled = false },
+  -- { "folke/noice.nvim", enabled = false },
 }

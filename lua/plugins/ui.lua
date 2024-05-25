@@ -41,114 +41,84 @@ return {
     "nvim-lualine/lualine.nvim",
     event = "VeryLazy",
     opts = function()
-      local icons = require("lazyvim.config").icons
-      local Util = require("lazyvim.util")
       local colors = {
-        [""] = Util.ui.fg("Special"),
-        ["Normal"] = Util.ui.fg("Special"),
-        ["Warning"] = Util.ui.fg("DiagnosticError"),
-        ["InProgress"] = Util.ui.fg("DiagnosticWarn"),
+        grey = "#7b8496",
+        green = "#5eff6c",
+        blue = "#5ea1ff",
+        cyan = "#5ef1ff",
+        red = "#ff6e5e",
+        magenta = "#ff5ef1",
+        yellow = "#f1ff5e",
+        none = "NONE",
       }
-
+      local copilot_colors = {
+        [""] = { fg = colors.grey, bg = colors.none },
+        ["Normal"] = { fg = colors.grey, bg = colors.none },
+        ["Warning"] = { fg = colors.red, bg = colors.none },
+        ["InProgress"] = { fg = colors.yellow, bg = colors.none },
+      }
       return {
         options = {
+          -- separators = { left = "","","","█"  right = "","","","█" },
+          component_separators = { left = " ", right = " " },
+          section_separators = { left = " ", right = " " },
           theme = "auto",
-          -- background_colour = "transparent",
-          component_separators = { left = "", right = "" },
-          -- component_separators = { left = "", right = "" },
-          -- section_separators = { left = "", right = "" },
-          -- section_separators = { left = "", right = "" },
-          section_separators = { left = "█", right = "█" },
           globalstatus = true,
           disabled_filetypes = { statusline = { "dashboard", "alpha" } },
         },
         sections = {
-          -- lualine_a = { { "mode", separator = { left = "", right = "" }, padding = 1 } },
-          lualine_a = { { "mode", separator = { left = "", right = "" }, padding = 1 } },
+          lualine_a = {
+            { "mode", icon = "" },
+            -- icon = ""
+          },
           lualine_b = {
+            { "branch", icon = "", padding = { left = 2, right = 1 }, color = { fg = "#1abc9c" } },
+            { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
             {
-              "filetype",
-              icon_only = true,
-              separator = "",
-              padding = {
-                left = 1,
-                right = 0,
-              },
+              "filename",
+              path = 1,
+              symbols = { modified = "🖉", readonly = "🛇", unnamed = "" },
+              padding = { left = 0, right = 1 },
+              -- color = { fg = "#FFFFFF" },
             },
-            { "filename", path = 1, symbols = { modified = "🖹", readonly = " 🛇 ", unnamed = "" } },
           },
           lualine_c = {
-            "branch",
-            {
-              "diff",
-              symbols = {
-                added = icons.git.added,
-                modified = icons.git.modified,
-                removed = icons.git.removed,
-              },
-            },
-            -- stylua: ignore
-            {
-              function() return require("nvim-navic").get_location() end,
-              cond = function() return package.loaded["nvim-navic"] and require("nvim-navic").is_available() end,
-            },
-          },
-          lualine_x = {
-            -- stylua: ignore
-            {
-                function() return require("noice").api.status.command.get() end,
-                cond = function()
-                    return package.loaded["noice"] and
-                        require("noice").api.status.command.has()
-                end,
-                color = Util.ui.fg("Statement")
-            },
-            -- stylua: ignore
-            {
-                function() return require("noice").api.status.mode.get() end,
-                cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
-                color = Util.ui.fg("Constant"),
-            },
-            -- stylua: ignore
+            -- "%=",
             -- {
             --   function()
-            --     return "  " .. require("dap").status()
+            --     return require("nvim-navic").get_location()
             --   end,
             --   cond = function()
-            --     return package.loaded["dap"] and require("dap").status() ~= ""
+            --     return package.loaded["nvim-navic"] and require("nvim-navic").is_available()
             --   end,
-            --   color = Util.ui.fg("Debug"),
+            --   color = { fg = colors.grey, bg = colors.none },
             -- },
+          },
+          lualine_x = {
+            -- status (like macro recording etc)
+            {
+              function()
+                return require("noice").api.status.mode.get()
+              end,
+              cond = function()
+                return package.loaded["noice"] and require("noice").api.status.mode.has()
+              end,
+              color = { fg = colors.blue, bg = colors.none },
+            },
             {
               require("lazy.status").updates,
               cond = require("lazy.status").has_updates,
-              color = Util.ui.fg("Special"),
-            },
-            --
-            {
-              "diagnostics",
-              symbols = {
-                error = icons.diagnostics.Error,
-                warn = icons.diagnostics.Warn,
-                info = icons.diagnostics.Info,
-                hint = icons.diagnostics.Hint,
-              },
+              color = { fg = colors.green },
             },
             -- copilot icon
             {
               function()
-                local icon = icons.kinds.Copilot
+                local icon = " "
                 local status = require("copilot.api").status.data
                 return icon .. (status.message or "")
               end,
               cond = function()
-                if not package.loaded["copilot"] then
-                  return
-                end
-                local ok, clients = pcall(require("lazyvim.util").lsp.get_clients, { name = "copilot", bufnr = 0 })
-                if not ok then
-                  return false
-                end
+                local ok, clients = pcall(vim.lsp.get_active_clients, { name = "copilot", bufnr = 0 })
                 return ok and #clients > 0
               end,
               color = function()
@@ -156,22 +126,24 @@ return {
                   return
                 end
                 local status = require("copilot.api").status.data
-                return colors[status.status] or colors[""]
+                return copilot_colors[status.status] or copilot_colors[""]
               end,
             },
           },
           lualine_y = {
-            { "location", padding = { left = 0, right = 1 } },
+            { "diagnostics", symbols = { error = " ", warn = " ", info = " ", hint = "󰝶 " } },
+            { "diff" },
           },
           lualine_z = {
-            -- { "progress", separator = { left = "", right = "" }, padding = { left = 1, right = 0 } },
-            { "progress", separator = { left = "", right = "" }, padding = { left = 1, right = 1 } },
+            { "location", color = { fg = colors.blue, bg = colors.none } },
+            { "progress" },
             -- function()
-            --   return " " .. os.date("%R")
+            --   return "  " .. os.date("%X")
             -- end,
           },
         },
-        extensions = { "neo-tree", "lazy" },
+
+        extensions = { "lazy", "toggleterm", "mason", "neo-tree", "trouble" },
       }
     end,
   },
@@ -260,8 +232,6 @@ return {
       { "<leader>bp", "<Cmd>BufferLineTogglePin<CR>", desc = "Toggle pin" },
       { "<leader>bP", "<Cmd>BufferLineGroupClose ungrouped<CR>", desc = "Delete non-pinned buffers" },
       { "<leader>bo", "<Cmd>BufferLineCloseOthers<CR>", desc = "Delete other buffers" },
-      { "<leader>br", "<Cmd>BufferLineCloseRight<CR>", desc = "Delete buffers to the right" },
-      { "<leader>bl", "<Cmd>BufferLineCloseLeft<CR>", desc = "Delete buffers to the left" },
       { "<S-h>", false },
       { "<S-l>", false },
       { "[b", false },
@@ -269,63 +239,85 @@ return {
     },
     opts = {
       options = {
-      -- stylua: ignore
-      close_command = function(n) require("mini.bufremove").delete(n, false) end,
-      -- stylua: ignore
-      right_mouse_command = function(n) require("mini.bufremove").delete(n, false) end,
-        diagnostics = "nvim_lsp",
+        indicator = { style = "none" },
+        buffer_close_icon = "",
+        separator_style = { "", "" },
         always_show_bufferline = false,
-        diagnostics_indicator = function(_, _, diag)
-          local icons = require("lazyvim.config").icons.diagnostics
-          local ret = (diag.error and icons.Error .. diag.error .. " " or "")
-            .. (diag.warning and icons.Warn .. diag.warning or "")
-          return vim.trim(ret)
-        end,
         offsets = {
           {
             filetype = "neo-tree",
-            text = "Neo-tree",
-            highlight = "Directory",
-            text_align = "left",
+            text = "Explorer",
+            text_align = "center",
           },
         },
       },
     },
-    config = function(_, opts)
-      require("bufferline").setup(opts)
-      -- Fix bufferline when restoring a session
-      vim.api.nvim_create_autocmd("BufAdd", {
-        callback = function()
-          vim.schedule(function()
-            pcall(nvim_bufferline)
-          end)
-        end,
-      })
-    end,
   },
 
   ----------------------------------------------------------------------------------------
-  -- nvim navic (for representing in which code block you're in right now)
+  -- nvim navic (for representing in which code block you're rn)
   ----------------------------------------------------------------------------------------
-  {
-    "SmiteshP/nvim-navic",
-    lazy = true,
-    init = function()
-      vim.g.navic_silence = true
-      require("lazyvim.util").lsp.on_attach(function(client, buffer)
-        if client.supports_method("textDocument/documentSymbol") then
-          require("nvim-navic").attach(client, buffer)
-        end
-      end)
-    end,
-    opts = function()
-      return {
-        separator = " ",
-        highlight = true,
-        depth_limit = 5,
-        icons = require("lazyvim.config").icons.kinds,
-        lazy_update_context = true,
-      }
-    end,
-  },
+  -- {
+  --   "SmiteshP/nvim-navic",
+  --   lazy = true,
+  --   init = function()
+  --     vim.g.navic_silence = true
+  --     require("lazyvim.util").lsp.on_attach(function(client, buffer)
+  --       if client.supports_method("textDocument/documentSymbol") then
+  --         require("nvim-navic").attach(client, buffer)
+  --       end
+  --     end)
+  --   end,
+  --   opts = function()
+  --     return {
+  --       separator = " 󰁔 ",
+  --       highlight = true,
+  --       depth_limit = 4,
+  --       icons = require("lazyvim.config").icons.kinds,
+  --       lazy_update_context = true,
+  --     }
+  --   end,
+  -- },
+
+  ----------------------------------------------------------------------------------------
+  -- animated indentscope line
+  ----------------------------------------------------------------------------------------
+  -- {
+  --   {
+  --     "echasnovski/mini.indentscope",
+  --     version = false,
+  --
+  --     config = function()
+  --       require("mini.indentscope").setup({
+  --         {
+  --           -- Draw options
+  --           draw = {
+  --             -- Delay (in ms) between event and start of drawing scope indicator
+  --             delay = 100,
+  --
+  --             priority = 2,
+  --           },
+  --           -- Options which control scope computation
+  --           options = {
+  --             -- Type of scope's border: which line(s) with smaller indent to
+  --             -- categorize as border. Can be one of: 'both', 'top', 'bottom', 'none'.
+  --             border = "none",
+  --
+  --             -- Whether to use cursor column when computing reference indent.
+  --             -- Useful to see incremental scopes with horizontal cursor movements.
+  --             indent_at_cursor = true,
+  --
+  --             -- Whether to first check input line to be a border of adjacent scope.
+  --             -- Use it if you want to place cursor on function header to get scope of
+  --             -- its body.
+  --             try_as_border = false,
+  --           },
+  --
+  --           -- Which character to use for drawing scope indicator
+  --           symbol = "╎",
+  --         },
+  --       })
+  --     end,
+  --   },
+  -- },
 }

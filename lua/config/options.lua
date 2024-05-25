@@ -7,3 +7,9 @@ vim.opt.backup = false
 
 -- vim.opt.shiftwidth = 4
 -- vim.opt.tabstop = 4
+
+vim.diagnostic.config({
+  float = { border = "rounded" },
+})
+
+-- vim.o.guicursor = "n-v-c-sm:block,i-ci-ve:hor1,r-cr-o:hor20,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor"
