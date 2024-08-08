@@ -14,7 +14,7 @@ end
 -- Clear search with <esc>
 map({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and Clear hlsearch" })
 
--- do not yank with x and c
+-- do not yank with x, c, s
 map({ "n", "x" }, "x", '"_x')
 map({ "n" }, "X", '"_dd')
 map({ "x" }, "X", '"_X')
@@ -24,7 +24,7 @@ map({ "x", "n" }, "s", '"_d')
 map({ "n" }, "S", '"_S')
 map({ "n" }, "xl", '"_dd')
 
--- do not yank with visual paste ( alternatively you can always use capital P)
+-- do not yank with visual paste
 map("x", "p", "P", { desc = "no yank on select-paste " })
 
 -- REDO with U
@@ -40,15 +40,18 @@ map({ "i", "n" }, "<C-a>", "<ESC>ggVG")
 
 -- writing and quiting
 map("n", "<leader>wo", "<cmd> wqa <cr>", { desc = "write and quit all" })
-map({ "n", "i" }, "<C-s>", "<cmd> wqa <cr>")
-map({ "n", "i" }, "<C-q>", "<cmd> qa! <cr>")
 map({ "n" }, "<leader>wn", "<cmd> qa! <cr>", { desc = "quit all without saving" })
+-- map({ "n", "i" }, "<C-s>", "<cmd> wqa <cr>")
+-- map({ "n", "i" }, "<C-q>", "<cmd> qa! <cr>")
 
--- find and replace
+-- find and replace & quickfix
 map({ "n" }, "?", ":%s/", { desc = "Find and replace in current file", silent = false })
+map({ "n" }, "<leader>?", ":cdo s/", { desc = "Find and replace in quickfix list", silent = false })
+map("n", "]q", "<cmd>cnext<cr>", { desc = "Next Quickfix" })
+map("n", "[q", "<cmd>cprev<cr>", { desc = "Prev Quickfix" })
 
 -- remapping % to 'tp'
-map({ "n", "x" }, "tp", "%", { desc = "Teleport between braces" })
+map({ "n", "x", "o", "v" }, "tp", "%", { desc = "Teleport between braces" })
 
 -- operation on selected lines
 map({ "n", "v" }, "mm", ":'<,'>norm ", { desc = "Operation on selected lines", silent = false })
@@ -56,14 +59,12 @@ map({ "n", "v" }, "mm", ":'<,'>norm ", { desc = "Operation on selected lines", s
 -- delete strings with backspace (require mini.ai)
 map("n", "<BS>", '"_ci"')
 
---keywordprg
--- map("n", "<leader>K", "<cmd>norm! K<cr>", { desc = "Keywordprg" })
-
--- Buffers and Harpoon
-map("n", "<S-h>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
-map("n", "<S-l>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
+-- Buffers
+map("n", "<M-h>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
+map("n", "<M-l>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
 map("n", "<leader>ww", "<cmd>bdelete!<cr>", { desc = "Delete Buffer" })
-map({ "i", "v", "n" }, "<C-w>", "<cmd>lua require('harpoon'):list():remove()<cr><cmd>bdelete!<cr>")
+map("n", "<C-x>", "<cmd>bdelete!<cr>", { desc = "Delete Buffer" })
+-- map({ "i", "v", "n" }, "<C-w>", "<cmd>lua require('harpoon'):list():remove()<cr><cmd>bdelete!<cr>")
 
 -- better up/down
 map({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { expr = true })
@@ -78,15 +79,15 @@ map("n", "gco", "o<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add Commen
 map("n", "gcO", "O<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add Comment Above" })
 
 -- windows
-map("n", "<leader>wd", "<c-w>c", { desc = "delete window", remap = true })
-map("n", "<leader>-", "<c-w>s", { desc = "split window below", remap = true })
-map("n", "<leader>|", "<c-w>v", { desc = "split window right", remap = true })
+map("n", "<leader>wd", "<cmd>close<cr>", { desc = "delete window", remap = true })
+map("n", "<leader>-", "<cmd>split<cr>", { desc = "split window below", remap = true })
+map("n", "<leader>|", "<cmd>vsplit<cr>", { desc = "split window right", remap = true })
 
 -- Move to window using the <ctrl> hjkl keys
-map("n", "<C-h>", "<C-w>h", { desc = "Go to left window", remap = true })
-map("n", "<C-j>", "<C-w>j", { desc = "Go to lower window", remap = true })
-map("n", "<C-k>", "<C-w>k", { desc = "Go to upper window", remap = true })
-map("n", "<C-l>", "<C-w>l", { desc = "Go to right window", remap = true })
+map("n", "<C-h>", "<cmd>wincmd h<cr>", { desc = "Go to left window", remap = true })
+map("n", "<C-j>", "<cmd>wincmd j<cr>", { desc = "Go to lower window", remap = true })
+map("n", "<C-k>", "<cmd>wincmd k<cr>", { desc = "Go to upper window", remap = true })
+map("n", "<C-l>", "<cmd>wincmd l<cr>", { desc = "Go to right window", remap = true })
 
 -- Resize window using <ctrl> arrow keys
 map("n", "<C-Up>", "<cmd>resize +2<cr>", { desc = "Increase Window Height" })
@@ -118,7 +119,7 @@ map("o", "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev Search Result
 -- stylua: ignore start
 
 -- lazy
-map("n", "<leader>l", "<cmd>Lazy<cr>", { desc = "Lazy" })
+map("n", "<leader>llll", "<cmd>Lazy<cr>", { desc = "Lazy" })
 
 -- diagnostic
 local diagnostic_goto = function(next, severity)
@@ -162,10 +163,10 @@ map("n", "<leader>ud", function()
 
     if enabled then
         vim.diagnostic.enable()
-        require("notify")("Enabled Diagnostics", "info", { title = "Diagnostics" })
+        require("notify")("Diagnostics Enabled", "info", { title = "Diagnostics" })
     else
-        vim.diagnostic.disable()
-        require("notify")("Disabled Diagnostics", "info", { title = "Diagnostics" })
+        vim.diagnostic.enable(false)
+        require("notify")("Diagnostics Disabled", "info", { title = "Diagnostics" })
     end
 end, { desc = "Toggle diagnostics" })
 map("n", "<leader>us", function()

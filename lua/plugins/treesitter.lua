@@ -25,6 +25,7 @@ return {
     opts = {
         highlight = { enable = true },
         indent = { enable = true },
+        auto_install = true, -- auto install the missing parser on new file type detection
         ensure_installed = {
             "bash",
             "html",
@@ -42,6 +43,8 @@ return {
             "tsx",
             "typescript",
             "rust",
+            "vim",
+            "vimdoc",
         },
         incremental_selection = {
             enable = true,

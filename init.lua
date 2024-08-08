@@ -20,24 +20,33 @@ require("lazy").setup({
     spec = {
         { import = "plugins" },
     },
+
     defaults = {
         lazy = true,
         version = false,
     },
+
     install = {
         missing = true,
         colorscheme = { "default" },
     },
+
     checker = { enabled = false },
     change_detection = {
         -- automatically check for config file changes and reload the ui
         enabled = false,
         notify = false, -- get a notification when changes are found
     },
+
+    rocks = {
+        enabled = false,
+    },
+
     -- dev = {
     --     path = "~/git",
     --     fallback = true,
     -- },
+
     performance = {
         rtp = {
             disabled_plugins = {
@@ -50,6 +59,7 @@ require("lazy").setup({
             },
         },
     },
+
     ui = {
         -- a number <1 is a percentage., >1 is a fixed size
         size = { width = 0.8, height = 0.8 },

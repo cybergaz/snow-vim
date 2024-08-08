@@ -8,10 +8,10 @@ return {
     },
     opts = function()
         return {
-            inlay_hints = {
-                enabled = false,
-                exclude = {}, -- filetypes for which you don't want to enable inlay hints
-            },
+            -- inlay_hints = {
+            --     enabled = false,
+            --     exclude = {}, -- filetypes for which you don't want to enable inlay hints
+            -- },
             -- codelens = {
             --     enabled = false,
             -- },
@@ -22,7 +22,10 @@ return {
         }
     end,
     config = function(_, opts)
-        local mason_registry = require("mason-registry")
+        -- local mason_registry = require("mason-registry")
+
+        -- setting its value to true helps in toggling inlay_hints
+        vim.lsp.inlay_hint.enable(true)
 
         -- Diagnostics
         vim.diagnostic.config({
@@ -52,6 +55,28 @@ return {
         --   },
         -- }),
 
+        -- tsserver
+        local inlayHints = {
+            includeInlayParameterNameHints = "all",
+            includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+            includeInlayFunctionParameterTypeHints = true,
+            -- includeInlayVariableTypeHints = true,
+            includeInlayVariableTypeHintsWhenTypeMatchesName = false,
+            includeInlayPropertyDeclarationTypeHints = true,
+            includeInlayFunctionLikeReturnTypeHints = true,
+            includeInlayEnumMemberValueHints = true,
+        }
+        require("lspconfig").tsserver.setup({
+            settings = {
+                typescript = {
+                    inlayHints = inlayHints,
+                },
+                javascript = {
+                    inlayHints = inlayHints,
+                },
+            },
+        })
+
         -- Go
         require("lspconfig").gopls.setup({
             settings = {
@@ -61,6 +86,17 @@ return {
                         unusedparams = true,
                     },
                     staticcheck = true,
+                },
+            },
+        })
+
+        -- swift
+        require("lspconfig").sourcekit.setup({
+            capabilities = {
+                workspace = {
+                    didChangeWatchedFiles = {
+                        dynamicRegistration = true,
+                    },
                 },
             },
         })

@@ -8,7 +8,6 @@ opt.clipboard = vim.env.SSH_TTY and "" or "unnamedplus" -- Sync with system clip
 opt.conceallevel = 2 -- hide * markup for bold and italic, but not markers with substitutions
 opt.confirm = true -- Confirm to save changes before exiting modified buffer
 opt.cursorline = false -- Enable highlighting of the current line
-opt.expandtab = true -- Use spaces instead of tabs
 opt.ignorecase = true -- Ignore case
 opt.smartcase = true -- Don't ignore case with capitals
 opt.inccommand = "nosplit" -- preview incremental substitute
@@ -20,7 +19,7 @@ opt.relativenumber = true -- Relative line numbers
 opt.pumheight = 10 -- Maximum number of entries in a popup
 opt.scrolloff = 5 -- self explanatory
 opt.sidescrolloff = 8 -- self explanatory
--- opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds" }
+opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds" }
 opt.termguicolors = true -- True color support
 opt.splitbelow = true -- Put new windows below current
 opt.splitkeep = "screen"
@@ -41,7 +40,7 @@ opt.tabstop = 4
 opt.shiftwidth = 4
 opt.autoindent = true
 opt.smartindent = true
-opt.expandtab = true
+opt.expandtab = true -- Use spaces instead of tabs
 
 vim.diagnostic.config({
     float = { border = "rounded" },

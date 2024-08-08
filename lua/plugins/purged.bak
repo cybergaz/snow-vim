@@ -1,0 +1,525 @@
+return {
+    "ThePrimeagen/harpoon",
+    event = { "BufReadPost", "BufNewFile" },
+    dependencies = {
+        "nvim-lua/plenary.nvim",
+    },
+    branch = "harpoon2",
+    config = true,
+    opts = function(_)
+        require("harpoon"):setup({
+            settings = {
+                save_on_toggle = true,
+                sync_on_ui_close = false,
+            },
+        })
+    end,
+    -- enabled = false,
+
+    keys = {
+        {
+            "<leader>hh",
+            function()
+                require("harpoon"):list():add()
+            end,
+            desc = "Mark file with harpoon",
+        },
+        {
+            "<leader>hr",
+            function()
+                require("harpoon"):list():remove()
+            end,
+            desc = "Remove harpoon marks",
+        },
+        {
+            "<leader>hl",
+            function()
+                require("harpoon").ui:toggle_quick_menu(require("harpoon"):list())
+            end,
+            desc = "Harpoon List",
+        },
+        {
+            "<A-h>",
+            function()
+                require("harpoon"):list():prev({ ui_nav_wrap = true })
+            end,
+        },
+        {
+            "<A-l>",
+            function()
+                require("harpoon"):list():next({ ui_nav_wrap = true })
+            end,
+        },
+        {
+            "<leader>1",
+            function()
+                require("harpoon"):list():select(1)
+            end,
+            desc = "Switch to harpoon 1",
+        },
+        {
+            "<leader>2",
+            function()
+                require("harpoon"):list():select(2)
+            end,
+            desc = "Switch to harpoon 2",
+        },
+        {
+            "<leader>3",
+            function()
+                require("harpoon"):list():select(3)
+            end,
+            desc = "Switch to harpoon 3",
+        },
+        {
+            "<leader>4",
+            function()
+                require("harpoon"):list():select(4)
+            end,
+            desc = "Switch to harpoon 4",
+        },
+        {
+            "<leader>5",
+            function()
+                require("harpoon"):list():select(5)
+            end,
+            desc = "Switch to harpoon 5",
+        },
+
+        -- HARPOON 1 config
+        --   { "<leader>a", "<cmd>lua require('harpoon.mark').add_file()<cr>", desc = "Mark file with harpoon" },
+        --   { "<leader>hh", "<cmd>lua require('harpoon.mark').add_file()<cr>", desc = "Mark file with harpoon" },
+        --   { "<leader>hr", "<cmd>lua require('harpoon.mark').rm_file()<cr>", desc = "Remove harpoon marks" },
+        --   { "<leader>hl", "<cmd>lua require('harpoon.ui').toggle_quick_menu()<cr>", desc = "Show harpoon marks" },
+        --   { "<S-l>", "<cmd>lua require('harpoon.ui').nav_next()<cr>", desc = "Go to next harpoon mark" },
+        --   -- { "<C-l>", "<cmd>lua require('harpoon.ui').nav_next()<cr>", desc = "Go to next harpoon mark" },
+        --   { "<S-h>", "<cmd>lua require('harpoon.ui').nav_prev()<cr>", desc = "Go to previous harpoon mark" },
+        --   { "<leader>h1", "<cmd>lua require('harpoon.ui').nav_file(1)<cr>", desc = "harpoon file 1" },
+        --   { "<leader>h2", "<cmd>lua require('harpoon.ui').nav_file(2)<cr>", desc = "harpoon file 2" },
+        --   { "<leader>h3", "<cmd>lua require('harpoon.ui').nav_file(3)<cr>", desc = "harpoon file 3" },
+        --   { "<leader>h4", "<cmd>lua require('harpoon.ui').nav_file(4)<cr>", desc = "harpoon file 4" },
+        --   { "<leader>h5", "<cmd>lua require('harpoon.ui').nav_file(5)<cr>", desc = "harpoon file 5" },
+    },
+}
+
+
+
+----------------------------------------------------------------------------------------
+-- tokyonight theme configuration
+----------------------------------------------------------------------------------------
+{
+  "folke/tokyonight.nvim",
+  lazy = false,
+  priority = 1000,
+  opts = {
+    style = "storm",
+
+    transparent = true,
+
+    styles = {
+      comments = { italic = true },
+      keywords = { italic = false },
+      functions = { bold = true },
+      variables = {},
+      sidebars = "transparent",
+      floats = "transparent",
+    },
+    hide_inactive_statusline = false,
+    dim_inactive = false, -- dims inactive windows
+    lualine_bold = false, -- When `true`, section headers in the lualine theme will be bold
+
+    -- -----------------------------------------------------------------------------------
+    on_colors = function(colors)
+      -- colors.bg = "#24283b"
+      -- colors.bg_dark = "#1f2335"
+      -- colors.bg_float = "#1f2335"
+      -- colors.bg_highlight = "#292e42"
+      -- colors.bg_popup = "#1f2335"
+      -- colors.bg_search = "#89ddff"
+      -- colors.bg_sidebar = "#1f2335"
+      -- colors.fg = "#c0caf5"
+      -- colors.fg_dark = "#a9b1d6"
+      -- colors.fg_float = "#c0caf5"
+      -- colors.fg_gutter = "#3b4261"
+      -- colors.fg_sidebar = "#a9b1d6"
+      colors.bg_statusline = ""
+      colors.border = "#1d202f"
+      colors.border_highlight = "#29a4bd"
+      colors.error = "#ff5370"
+      colors.warning = "#ff9e64"
+
+      colors.hint = "#1abc9c"
+      colors.info = "#0db9d7"
+      -- colors.bg_visual = "#2e3c64"
+
+      colors.black = "#1d202f"
+      colors.blue = "#7aa2ff"
+      colors.blue0 = "#3d59a1"
+      colors.blue1 = "#2ac3de"
+      colors.blue2 = "#0db9d7"
+      colors.blue5 = "#89ddff"
+      colors.blue6 = "#b4f9f8"
+      colors.blue7 = "#394b70"
+
+      -- colors.cyan = "#7dcfff"
+      colors.cyan = "#6a8ede"
+
+      colors.dark3 = "#545c7e"
+      colors.dark5 = "#737aa2"
+
+      -- colors.green = "#00e08f"
+      colors.green = "#27d696"
+      colors.green1 = "#73daca"
+      colors.green2 = "#41a6b5"
+      colors.teal = "#1abc9c"
+
+      colors.magenta = "#8f70f0"
+      colors.magenta2 = "#ff007c"
+
+      colors.purple = "#0f70f0"
+
+      colors.orange = "#f76d47"
+      colors.red = "#8f70F0"
+      colors.red1 = "#db4b4b"
+
+      colors.terminal_black = "#414868"
+      colors.yellow = "#30a0c0"
+
+      colors.gitSigns = {
+        add = "#1adc9c",
+        change = "#4b9be5",
+        delete = "#bf555b",
+      }
+      colors.delta = {
+        add = "#316172",
+        delete = "#763842",
+      }
+      colors.diff = {
+        add = "#283b4d",
+        change = "#272d43",
+        delete = "#3f2d3d",
+        text = "#394b70",
+      }
+    end,
+    -- -----------------------------------------------------------------------------------
+    -- -----------------------------------------------------------------------------------
+    on_highlights = function(hl, colors)
+      -- local "" = ""
+
+      hl.boolean = {
+        -- fg = "#f76d47",
+        fg = "#E32283",
+        style = {},
+      }
+      hl.Constant = {
+        fg = "#8f70f0",
+        style = { italic = true },
+      }
+      -- hl.Variable = {
+      --   fg = "#0000ff",
+      --   style = {},
+      -- }
+      -- hl.string = {
+      --   fg = "",
+      --   style = {},
+      -- }
+      -- hl.Character = {
+      --   fg = "#0000ff",
+      -- }
+      hl.number = {
+        -- fg = "#f76d47",
+        fg = "#E32283",
+        style = {},
+      }
+
+      hl.Comment = {
+        -- fg = "#60606f",
+        fg = "#4a5266",
+        style = {
+          italic = true,
+        },
+      }
+
+      hl.Keyword = {
+        fg = "#4b9be5",
+        style = {},
+      }
+
+      hl.namespace = {
+        fg = "#0000ff",
+        style = {},
+      }
+
+      hl.Operator = {
+        fg = "#2050d0",
+        style = {},
+      }
+
+      hl.Function = {
+        -- fg = "#2fdfAf",
+        fg = "#73baf5",
+        style = { bold = true, italic = true },
+      }
+
+      -- hl.Hlargs = {
+      --   fg = "#00ff00",
+      -- }
+
+      hl.Type = {
+        fg = "#08afa3",
+      }
+
+      hl.LineNr = {
+        fg = colors.dark3,
+      }
+
+      hl.CursorLineNr = {
+        fg = "#2552ff",
+      }
+
+      hl.CursorLine = {
+        bg = "",
+      }
+
+      hl.Title = {
+        bold = true,
+        fg = "#00f0ac",
+      }
+
+      hl.FlashLabel = {
+        bg = "",
+        bold = true,
+        italic = true,
+        fg = "#ff3689",
+      }
+
+      hl.FloatBorder = {
+        bg = "",
+        fg = "#035B78",
+      }
+
+      hl.IncSearch = {
+        bg = "#f0f0f0",
+        fg = "#1d202f",
+      }
+      hl.Search = {
+        bg = "#70707f",
+        fg = "#f2f2ff",
+      }
+
+      hl.DiagnosticError = {
+        fg = "#ff5370",
+      }
+
+      hl.DiagnosticWarn = {
+        fg = "#30a0c0",
+      }
+
+      hl.DiagnosticVirtualTextHint = {
+        bg = "",
+        fg = "#1abc9c",
+      }
+
+      hl.DiagnosticVirtualTextError = {
+        bg = "",
+        fg = "#ff5370",
+      }
+
+      hl.DiagnosticVirtualTextInfo = {
+        bg = "",
+        fg = "#0db9d7",
+      }
+
+      hl.DiagnosticVirtualTextWarn = {
+        bg = "",
+        fg = "#30a0c0",
+      }
+
+      hl.MatchParen = {
+        bold = true,
+        fg = "#2552ff",
+      }
+
+      -- Telescope colors --
+
+      -- hl.TelescopeNormal = {
+      --   bg = colors.bg_dark,
+      --   fg = colors.fg_dark,
+      -- }
+      -- hl.TelescopeBorder = {
+      --   bg = colors.bg_dark,
+      --   fg = colors.bg_dark,
+      -- }
+      hl.TelescopePromptNormal = {
+        bg = "",
+      }
+      hl.TelescopePromptBorder = {
+        bg = "",
+        fg = "",
+      }
+      hl.TelescopePromptTitle = {
+        bg = "",
+        fg = "",
+      }
+      -- hl.TelescopePreviewTitle = {
+      --   bg = colors.bg_dark,
+      --   fg = colors.bg_dark,
+      -- }
+      -- hl.TelescopeResultsTitle = {
+      --   bg = colors.bg_dark,
+      --   fg = colors.bg_dark,
+      -- }
+    end,
+  },
+},
+
+
+
+
+-- -----------------------------------------------------------------------------------
+
+
+
+
+{
+    "b0o/incline.nvim",
+    config = function()
+        require("incline").setup()
+    end,
+    -- Optional: Lazy load Incline
+    event = "VeryLazy",
+},
+
+
+
+
+-- -----------------------------------------------------------------------------------
+
+
+
+
+return {
+    "akinsho/bufferline.nvim",
+    event = "VeryLazy",
+    keys = {
+        { "<leader>bp", "<Cmd>BufferLineTogglePin<CR>", desc = "Toggle pin" },
+        { "<leader>p", "<Cmd>BufferLineTogglePin<CR>", desc = "Toggle pin" },
+        { "<leader>bx", "<Cmd>BufferLineCloseOthers<CR>", desc = "Delete other buffers" },
+        { "<leader>bq", "<Cmd>BufferLineGroupClose ungrouped<CR>", desc = "Delete non-pinned buffers" },
+        { "<S-h>", "<cmd>BufferLineCyclePrev<cr>", desc = "Prev Buffer" },
+        { "<S-l>", "<cmd>BufferLineCycleNext<cr>", desc = "Next Buffer" },
+        { "[b", "<cmd>BufferLineMovePrev<cr>", desc = "Move buffer prev" },
+        { "]b", "<cmd>BufferLineMoveNext<cr>", desc = "Move buffer next" },
+    },
+    opts = {
+        options = {
+            indicator = { style = "none" },
+            buffer_close_icon = "",
+            -- hover = {
+            --     enabled = true,
+            --     delay = 200,
+            --     reveal = { "close" },
+            -- },
+            separator_style = { "", "" },
+            always_show_bufferline = false,
+            diagnostics = "nvim_lsp",
+            -- diagnostics_indicator = function(_, _, diag)
+            --     local icons = require("lazyvim.config").icons.diagnostics
+            --     local ret = (diag.error and icons.error .. diag.error .. " " or "")
+            --         .. (diag.warning and icons.warn .. diag.warning or "")
+            --     return vim.trim(ret)
+            -- end,
+            offsets = {
+                {
+                    filetype = "neo-tree",
+                    text = "Explorer",
+                    text_align = "center",
+                },
+            },
+        },
+    },
+    config = function(_, opts)
+        require("bufferline").setup(opts)
+        -- Fix bufferline when restoring a session
+        vim.api.nvim_create_autocmd({ "BufAdd", "BufDelete" }, {
+            callback = function()
+                vim.schedule(function()
+                    pcall(nvim_bufferline)
+                end)
+            end,
+        })
+    end,
+}
+
+-------------------------------------------------------------------
+-- spectre
+-------------------------------------------------------------------
+-- {
+--     "nvim-pack/nvim-spectre",
+--     cmd = "Spectre",
+--
+--     -- stylua: ignore
+--     keys = { { "<leader>sr", function() require("spectre").open() end, desc = "Replace in files (Spectre)", }, },
+-- },
+
+
+
+-- nvim navic
+{
+  --   "SmiteshP/nvim-navic",
+  --   lazy = true,
+  --   init = function()
+  --     vim.g.navic_silence = true
+  --     require("lazyvim.util").lsp.on_attach(function(client, buffer)
+  --       if client.supports_method("textDocument/documentSymbol") then
+  --         require("nvim-navic").attach(client, buffer)
+  --       end
+  --     end)
+  --   end,
+  --   opts = function()
+  --     return {
+  --       separator = " 󰁔 ",
+  --       highlight = true,
+  --       depth_limit = 4,
+  --       icons = require("lazyvim.config").icons.kinds,
+  --       lazy_update_context = true,
+  --     }
+  --   end,
+  -- },
+
+
+
+  ----------------------------------------------------------------------------------------
+  -- vim-flog : more visually appealing git log
+  ----------------------------------------------------------------------------------------
+  {
+    "rbong/vim-flog",
+    lazy = true,
+    cmd = { "Flog", "Flogsplit", "Floggit" },
+    dependencies = {
+      "tpope/vim-fugitive",
+    },
+    keys = {
+      { "<leader>gl", "<cmd>Flogsplit -all -graph<cr>", desc = "Git log (vim-flog)" },
+    },
+  },
+
+  ----------------------------------------------------------------------------------------
+  -- leap - jumping around with few keystrokes
+  ----------------------------------------------------------------------------------------
+  {
+    "ggandor/leap.nvim",
+    enabled = true,
+    keys = {
+      { "s", mode = { "n", "x", "o" }, desc = "Leap forward to" },
+      { "S", mode = { "n", "x", "o" }, desc = "Leap backward to" },
+      { "gs", mode = { "n", "x", "o" }, desc = "Leap from windows" },
+    },
+    config = function()
+      local leap = require("leap")
+      leap.add_default_mappings(false)
+      leap.opts.max_phase_one_targets = nil
+      leap.opts.highlight_unlabeled_phase_one_targets = false
+    end,
+  },
+}

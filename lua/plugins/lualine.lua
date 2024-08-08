@@ -25,7 +25,7 @@ return {
                 section_separators = { left = " ", right = " " },
                 theme = "auto",
                 globalstatus = true,
-                disabled_filetypes = { statusline = { "dashboard", "alpha" } },
+                disabled_filetypes = { statusline = { "dashboard", "alpha", "Telescope" } },
             },
             sections = {
                 lualine_a = {
@@ -34,17 +34,25 @@ return {
                 },
                 lualine_b = {
                     { "branch", icon = "", padding = { left = 2, right = 1 }, color = { fg = "#1abc9c" } },
+                    { "grapple", separator = "", padding = { left = 2, right = 1 } },
+                    {
+                        "filename",
+                        path = 0,
+                        symbols = { modified = "+", readonly = "", unnamed = "", newfile = "" },
+                        padding = { left = 0, right = 3 },
+                        color = { fg = "#ffffff" },
+                    },
+                },
+                lualine_c = {
+                    -- "%=",
                     { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
                     {
                         "filename",
                         path = 1,
                         symbols = { modified = "🖉", readonly = "🛇", unnamed = "" },
                         padding = { left = 0, right = 1 },
-                        -- color = { fg = "#FFFFFF" },
+                        color = { fg = colors.grey },
                     },
-                },
-                lualine_c = {
-                    -- "%=",
                     -- {
                     --   function()
                     --     return require("nvim-navic").get_location()
@@ -83,7 +91,7 @@ return {
                             return icon .. (status.message or "")
                         end,
                         cond = function()
-                            local ok, clients = pcall(vim.lsp.get_active_clients, { name = "copilot", bufnr = 0 })
+                            local ok, clients = pcall(vim.lsp.get_clients, { name = "copilot", bufnr = 0 })
                             return ok and #clients > 0
                         end,
                         color = function()
@@ -102,13 +110,14 @@ return {
                 lualine_z = {
                     { "location", color = { fg = colors.blue, bg = colors.none } },
                     { "progress" },
+
                     -- function()
                     --   return "  " .. os.date("%X")
                     -- end,
                 },
             },
 
-            extensions = { "lazy", "mason", "neo-tree", "trouble" },
+            extensions = { "lazy", "mason", "neo-tree" },
         }
     end,
 }

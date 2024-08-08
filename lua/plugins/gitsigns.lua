@@ -1,14 +1,14 @@
 return {
     "lewis6991/gitsigns.nvim",
-    event = { "bufreadpre", "bufnewfile" },
+    event = { "VeryLazy" },
     opts = {
         signs = {
-            add = { text = "▎" },
-            change = { text = "▎" },
-            delete = { text = "" },
-            topdelete = { text = "" },
-            changedelete = { text = "▎" },
-            untracked = { text = "▎" },
+            add = { text = "┃" },
+            change = { text = "┃" },
+            delete = { text = "-" },
+            topdelete = { text = "-" },
+            changedelete = { text = "┃" },
+            untracked = { text = "┃" },
         },
         on_attach = function(buffer)
             local gs = package.loaded.gitsigns
@@ -33,3 +33,24 @@ return {
         end,
     },
 }
+
+-- return {
+--     "echasnovski/mini.diff",
+--     version = "*",
+--     event = "VeryLazy",
+--     config = function()
+--         require("mini.diff").setup({
+--             -- Options for how hunks are visualized
+--             view = {
+--                 -- Visualization style. Possible values are 'sign' and 'number'.
+--                 style = "sign",
+--
+--                 -- Signs used for hunks with 'sign' view
+--                 signs = { add = "▎", change = "▎", delete = "" },
+--
+--                 -- Priority of used visualization extmarks
+--                 priority = 199,
+--             },
+--         })
+--     end,
+-- }

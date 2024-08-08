@@ -12,7 +12,7 @@ return {
         telescope.setup({
             pickers = {
                 find_files = {
-                    find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
+                    find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*", "--glob", "!**/.build/**" },
                 },
             },
             defaults = {
@@ -46,7 +46,8 @@ return {
                     i = {
                         ["<C-k>"] = actions.move_selection_previous, -- move to prev result
                         ["<C-j>"] = actions.move_selection_next, -- move to next result
-                        ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
+                        ["<C-q>"] = actions.send_to_qflist + actions.open_qflist,
+                        ["<C-s>"] = actions.send_selected_to_qflist + actions.open_qflist,
                         ["<C-f>"] = actions.preview_scrolling_down,
                         ["<C-b>"] = actions.preview_scrolling_up,
                     },
@@ -58,9 +59,14 @@ return {
         })
     end,
     keys = {
-        { "<leader>fl", "<cmd>Telescope find_files<cr>", desc = "Find Files" },
+        { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find Files" },
+        { "<leader>k", "<cmd>Telescope find_files<cr>", desc = "Find Files" },
         { "<leader>fo", "<cmd>Telescope oldfiles<cr>", desc = "Find Oldfiles (Recents)" },
         { "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Live Grep" },
         { "<leader>fw", "<cmd>Telescope grep_string<cr>", desc = "Find word under the cursor" },
+        { "<leader>fb", "<cmd>Telescope buffers<cr>", desc = "Find Buffers" },
+        { "<leader>j", "<cmd>Telescope buffers<cr>", desc = "Find Buffers" },
+        { "<leader>fd", "<cmd>Telescope diagnostics<cr>", desc = "Find diagnostics" },
+        { "<leader>ft", "<cmd>Telescope<cr>", desc = "Other pickers..." },
     },
 }
