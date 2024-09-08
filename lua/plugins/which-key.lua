@@ -20,15 +20,15 @@ return {
             title_pos = "center",
         },
 
-        modes = {
-            n = true, -- Normal mode
-            i = true, -- Insert mode
-            x = false, -- Visual mode
-            s = true, -- Select mode
-            o = true, -- Operator pending mode
-            t = true, -- Terminal mode
-            c = true, -- Command mode
-        },
+        -- modes = {
+        --     n = true, -- Normal mode
+        --     i = true, -- Insert mode
+        --     x = false, -- Visual mode
+        --     s = true, -- Select mode
+        --     o = true, -- Operator pending mode
+        --     t = true, -- Terminal mode
+        --     c = true, -- Command mode
+        -- },
         spec = {
             { "<leader>a", group = "ai" },
             { "<leader>b", group = "buffer" },

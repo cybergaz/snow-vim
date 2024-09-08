@@ -42,6 +42,12 @@ return {
 
         -- Run setup for mason installed servers
         for _, server in pairs(require("mason-lspconfig").get_installed_servers()) do
+            -- ----------------------------------------------------
+            -- temporary fix for tsserver deprecation warning
+            if server == "tsserver" then
+                server = "ts_ls"
+            end
+            -- ----------------------------------------------------
             require("lspconfig")[server].setup({})
         end
 
@@ -55,7 +61,7 @@ return {
         --   },
         -- }),
 
-        -- tsserver
+        -- ts_ls
         local inlayHints = {
             includeInlayParameterNameHints = "all",
             includeInlayParameterNameHintsWhenArgumentMatchesName = false,
@@ -66,7 +72,7 @@ return {
             includeInlayFunctionLikeReturnTypeHints = true,
             includeInlayEnumMemberValueHints = true,
         }
-        require("lspconfig").tsserver.setup({
+        require("lspconfig").ts_ls.setup({
             settings = {
                 typescript = {
                     inlayHints = inlayHints,

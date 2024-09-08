@@ -1,7 +1,7 @@
 return {
     "zbirenbaum/copilot.lua",
-    -- cmd = "Copilot",
-    -- event = "InsertEnter",
+    cmd = "Copilot",
+    event = "InsertEnter",
     build = ":Copilot auth",
     keys = {
         {
@@ -35,7 +35,7 @@ return {
                 auto_trigger = true,
                 keymap = {
                     accept = "<M-l>",
-                    accept_line = "<M-;>",
+                    accept_line = "<M-h>",
                     next = "<M-]>",
                     prev = "<M-[>",
                     dismiss = "<C-e>",

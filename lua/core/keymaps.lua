@@ -64,6 +64,15 @@ map("n", "<M-h>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
 map("n", "<M-l>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
 map("n", "<leader>ww", "<cmd>bdelete!<cr>", { desc = "Delete Buffer" })
 map("n", "<C-x>", "<cmd>bdelete!<cr>", { desc = "Delete Buffer" })
+map("n", "<leader>bc", function()
+    local bufs = vim.api.nvim_list_bufs()
+    local current_buf = vim.api.nvim_get_current_buf()
+    for _, i in ipairs(bufs) do
+        if i ~= current_buf then
+            vim.api.nvim_buf_delete(i, {})
+        end
+    end
+end, { desc = "Delete all but current buffer" })
 -- map({ "i", "v", "n" }, "<C-w>", "<cmd>lua require('harpoon'):list():remove()<cr><cmd>bdelete!<cr>")
 
 -- better up/down
