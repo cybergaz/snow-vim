@@ -4,6 +4,7 @@ return {
     dependencies = {
         "williamboman/mason.nvim",
         "williamboman/mason-lspconfig.nvim",
+        "saghen/blink.cmp",
         -- "hrsh7th/cmp-nvim-lsp",
     },
     opts = function()
@@ -22,6 +23,7 @@ return {
         }
     end,
     config = function(_, opts)
+        local lspconfig = require("lspconfig")
         -- local mason_registry = require("mason-registry")
 
         -- setting its value to true helps in toggling inlay_hints
@@ -40,15 +42,36 @@ return {
             },
         })
 
+        local border = {
+            { "╭", "Comment" },
+            { "─", "Comment" },
+            { "╮", "Comment" },
+            { "│", "Comment" },
+            { "╯", "Comment" },
+            { "─", "Comment" },
+            { "╰", "Comment" },
+            { "│", "Comment" },
+        }
+
+        -- LSP settings (for overriding per client)
+        local handlers = {
+            ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = border }),
+            ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = border }),
+        }
+
+        local capabilities = require("blink.cmp").get_lsp_capabilities()
+
         -- Run setup for mason installed servers
+        -- require("notify")("installed server", "info", { title = "lsp conf" })
+        -- require("notify")(require("mason-lspconfig").get_installed_servers())
         for _, server in pairs(require("mason-lspconfig").get_installed_servers()) do
             -- ----------------------------------------------------
             -- temporary fix for tsserver deprecation warning
-            if server == "tsserver" then
-                server = "ts_ls"
-            end
+            -- if server == "tsserver" then
+            --     server = "ts_ls"
+            -- end
             -- ----------------------------------------------------
-            require("lspconfig")[server].setup({})
+            lspconfig[server].setup({ capabilities = capabilities, handlers = handlers })
         end
 
         -- copilot fix for rust
@@ -72,7 +95,8 @@ return {
             includeInlayFunctionLikeReturnTypeHints = true,
             includeInlayEnumMemberValueHints = true,
         }
-        require("lspconfig").ts_ls.setup({
+
+        lspconfig.ts_ls.setup({
             settings = {
                 typescript = {
                     inlayHints = inlayHints,
@@ -81,10 +105,12 @@ return {
                     inlayHints = inlayHints,
                 },
             },
+            capabilities = capabilities,
+            handlers = handlers,
         })
 
         -- Go
-        require("lspconfig").gopls.setup({
+        lspconfig.gopls.setup({
             settings = {
                 gopls = {
                     completeUnimported = true,
@@ -94,10 +120,12 @@ return {
                     staticcheck = true,
                 },
             },
+            capabilities = capabilities,
+            handlers = handlers,
         })
 
         -- swift
-        require("lspconfig").sourcekit.setup({
+        lspconfig.sourcekit.setup({
             capabilities = {
                 workspace = {
                     didChangeWatchedFiles = {
@@ -105,6 +133,7 @@ return {
                     },
                 },
             },
+            handlers = handlers,
         })
     end,
 }

@@ -46,9 +46,8 @@ return {
                     i = {
                         ["<C-k>"] = actions.move_selection_previous, -- move to prev result
                         ["<C-j>"] = actions.move_selection_next, -- move to next result
-                        ["<C-q>"] = actions.send_to_qflist + actions.open_qflist,
-                        ["<C-s>"] = actions.send_selected_to_qflist + actions.open_qflist,
-                        ["<C-f>"] = actions.preview_scrolling_down,
+                        ["<C-q>"] = actions.send_to_qflist + actions.open_qflist, -- send all to quickfix list
+                        ["<C-s>"] = actions.send_selected_to_qflist + actions.open_qflist, -- send selected to quickfix list                        ["<C-f>"] = actions.preview_scrolling_down,
                         ["<C-b>"] = actions.preview_scrolling_up,
                     },
                     n = {

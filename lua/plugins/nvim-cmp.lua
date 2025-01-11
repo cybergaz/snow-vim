@@ -1,6 +1,7 @@
 return {
     "hrsh7th/nvim-cmp",
     event = "InsertEnter",
+    enabled = false,
     dependencies = {
         "hrsh7th/cmp-nvim-lsp",
         "hrsh7th/cmp-buffer",
@@ -60,7 +61,6 @@ return {
         cmp.setup({
             window = {
                 -- stylua: ignore start
-
                 -- { "╭", "Comment" },
                 completion = {
                     border = { { "󱐋", "WarningMsg" }, { "─", "Comment" }, { "╮", "Comment" }, { "│", "Comment" }, { "╯", "Comment" }, { "─", "Comment" }, { "╰", "Comment" }, { "│", "Comment" }, },

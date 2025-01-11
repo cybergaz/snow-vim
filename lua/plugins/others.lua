@@ -12,6 +12,7 @@ return {
         keys = function()
             return {
                 { "<leader>e", "<cmd>Neotree float<cr>", desc = "neo tree float" },
+                { "<leader>be", "<cmd>Neotree buffers reveal float<cr>", desc = "neo tree buffers" },
             }
         end,
     },
@@ -95,5 +96,24 @@ return {
             icons = { type = "=> ", parameter = "<- " },
             italic = true,
         },
+    },
+
+    ----------------------------------------------------------------------------------------
+    -- Flash
+    ----------------------------------------------------------------------------------------
+    {
+        "folke/flash.nvim",
+        event = "VeryLazy",
+        opts = {},
+        -- stylua: ignore start
+        keys = {
+            { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+            { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+            { "r", false},
+            { "R", false },
+            { "<c-s>", false },
+        },
+
+        -- stylua: ignore end
     },
 }

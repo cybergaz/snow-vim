@@ -42,35 +42,32 @@ return {
                     highlights = {
                         -- See `:help highlight-groups` for a list of highlight groupsui
                         -- Complete list can be found in `lua/cyberdream/theme.lua`
+
                         Comment = { fg = "#51515c", italic = true },
-                        boolean = { fg = "#d61576", italic = true },
-                        Constant = { fg = "#6430cf", italic = true },
-                        Type = { fg = "#007777" },
-                        Identifier = { fg = "#A2AEB8" },
-                        Delimiter = { fg = "#9da1a1" }, -- for braces , colons and commas....
-                        -- Variable = { fg = "" },
-                        String = { fg = "#099e93" },
-                        -- Character = { fg = "", },
-                        Number = { fg = "#E32283" },
-                        Keyword = { fg = "#02cff7", italic = true },
-                        -- namespace = { fg = "" },
-                        Operator = { fg = "#d95289" },
-                        Function = { fg = "#0277c4", italic = true },
-                        -- Hlargs = { fg = "", },
-                        LineNr = { fg = "#3d414f" },
-                        CursorLineNr = { fg = "#7b8496" },
+                        Constant = { fg = "#179299", italic = false, bold = true },
                         CursorLine = { bg = "" },
-                        Title = { bold = true, fg = "#00f0ac" },
-                        Visual = { bg = "#2d3345" },
-                        -- FloatNormal = { bg = "", fg = "" },
+                        CursorLineNr = { fg = "#7b8496" },
+                        Delimiter = { fg = "#9da1a1" }, -- for braces , colons and commas....
+                        PreProc = { fg = "#3289E8" },
                         FloatBorder = { bg = "", fg = "#50505e" },
-                        -- NormalFloat = { bg = "", fg = "" },
-                        FloatTitle = { bg = "", fg = "#5ea1ff" },
+                        Function = { fg = "#0486db", italic = true },
+                        Identifier = { fg = "#8495f5", italic = true },
                         IncSearch = { bg = "#f0f0f0", fg = "#1d202f" },
-                        Search = { bg = "#70707f", fg = "#f2f2ff" },
+                        Keyword = { fg = "#277ca3", italic = true },
+                        LineNr = { fg = "#3d414f" },
                         MatchParen = { bold = true, fg = "#ff5ea0", bg = "" },
-                        Special = { fg = "#5ea1ff" },
+                        -- namespace = { fg = "" },
+                        Number = { fg = "#E32283" },
+                        Operator = { fg = "#8495f5", bold = true },
+                        Search = { bg = "#70707f", fg = "#f2f2ff" },
+                        Special = { fg = "#209fb5" },
+                        String = { fg = "#099e83" },
+                        Title = { bold = true, fg = "#00f0ac" },
+                        Type = { fg = "#007777" },
+                        Visual = { bg = "#2d3345" },
+                        -- Variable = { fg = "" },
                         WinSeparator = { fg = "#50505e", bg = "" },
+                        boolean = { fg = "#d61576", italic = true },
 
                         -- LSP & Diagnostics
                         DiagnosticError = { fg = "#ff5370" },
@@ -187,16 +184,29 @@ return {
         end,
     },
 
+    {
+        "catppuccin/nvim",
+        lazy = true,
+        event = "BufReadPost",
+        name = "catppuccin",
+        opts = {
+            transparent = true,
+        },
+    },
+
     -- {
     --     "folke/tokyonight.nvim",
     --     lazy = false,
     --     priority = 1000,
     --     opts = {
-    --         style = "storm",
-    --         transparent = true,
+    --         -- style = "storm",
+    --         -- transparent = true,
+    --         -- on_highlights = function(hl, c)
+    --         --     hl.Cursor = {
+    --         --         bg = "#ff0000",
+    --         --         fg = "#ff0000",
+    --         --     }
+    --         -- end,
     --     },
-    --     config = function(_, _)
-    --         vim.cmd("colorscheme tokyonight-storm") -- set the colorscheme
-    --     end,
     -- },
 }

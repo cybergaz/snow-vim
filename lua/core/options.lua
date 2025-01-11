@@ -34,6 +34,7 @@ opt.virtualedit = "block" -- Allow cursor to move where there is no text in visu
 opt.winminwidth = 5 -- Minimum window width
 opt.wrap = false -- Disable line wrap
 opt.smoothscroll = true
+-- opt.signcolumn = "number"
 
 -- Set tab width
 opt.tabstop = 4

@@ -15,14 +15,20 @@ end
 map({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and Clear hlsearch" })
 
 -- do not yank with x, c, s
-map({ "n", "x" }, "x", '"_x')
-map({ "n" }, "X", '"_dd')
+map({ "n", "x" }, "x", '"_d')
+map({ "n" }, "xx", '"_dd')
+map({ "n" }, "X", '"_d$')
 map({ "x" }, "X", '"_X')
 map({ "n", "x" }, "c", '"_c')
 map({ "n", "x" }, "C", '"_C')
 map({ "x", "n" }, "s", '"_d')
 map({ "n" }, "S", '"_S')
 map({ "n" }, "xl", '"_dd')
+
+-- start/end of line
+map({ "n", "x" }, "e", "$")
+map({ "n", "x" }, "E", "^")
+map({ "n", "x" }, "B", "^")
 
 -- do not yank with visual paste
 map("x", "p", "P", { desc = "no yank on select-paste " })
@@ -39,19 +45,20 @@ map("i", ";", ";<c-g>u")
 map({ "i", "n" }, "<C-a>", "<ESC>ggVG")
 
 -- writing and quiting
-map("n", "<leader>wo", "<cmd> wqa <cr>", { desc = "write and quit all" })
+map("n", "<leader>s", "<cmd> wa <cr>", { desc = "write all" })
+map("n", "<leader>S", "<cmd> wqa <cr>", { desc = "write and quit all" })
 map({ "n" }, "<leader>wn", "<cmd> qa! <cr>", { desc = "quit all without saving" })
 -- map({ "n", "i" }, "<C-s>", "<cmd> wqa <cr>")
 -- map({ "n", "i" }, "<C-q>", "<cmd> qa! <cr>")
 
 -- find and replace & quickfix
 map({ "n" }, "?", ":%s/", { desc = "Find and replace in current file", silent = false })
-map({ "n" }, "<leader>?", ":cdo s/", { desc = "Find and replace in quickfix list", silent = false })
+map({ "n" }, "<leader>?", ":cdo %s//gc | update", { desc = "Find and replace in quickfix list", silent = false })
 map("n", "]q", "<cmd>cnext<cr>", { desc = "Next Quickfix" })
 map("n", "[q", "<cmd>cprev<cr>", { desc = "Prev Quickfix" })
 
 -- remapping % to 'tp'
-map({ "n", "x", "o", "v" }, "tp", "%", { desc = "Teleport between braces" })
+map({ "n", "x", "o", "v" }, "|", "%", { desc = "Teleport between braces" })
 
 -- operation on selected lines
 map({ "n", "v" }, "mm", ":'<,'>norm ", { desc = "Operation on selected lines", silent = false })
@@ -104,13 +111,17 @@ map("n", "<C-Down>", "<cmd>resize -2<cr>", { desc = "Decrease Window Height" })
 map("n", "<C-Left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease Window Width" })
 map("n", "<C-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase Window Width" })
 
+-- scroll down/up
+map({ "n", "v" }, "<A-j>", "3j", { desc = "Scroll Down" })
+map({ "n", "v" }, "<A-k>", "3k", { desc = "Scroll Up" })
+
 -- Move Lines
-map("n", "<A-j>", "<cmd>m .+1<cr>==", { desc = "Move Down" })
-map("n", "<A-k>", "<cmd>m .-2<cr>==", { desc = "Move Up" })
-map("i", "<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
-map("i", "<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
-map("v", "<A-j>", ":m '>+1<cr>gv=gv", { desc = "Move Down" })
-map("v", "<A-k>", ":m '<-2<cr>gv=gv", { desc = "Move Up" })
+-- map("n", "<A-j>", "<cmd>m .+1<cr>==", { desc = "Move Down" })
+-- map("n", "<A-k>", "<cmd>m .-2<cr>==", { desc = "Move Up" })
+-- map("i", "<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
+-- map("i", "<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
+-- map("v", "<A-j>", ":m '>+1<cr>gv=gv", { desc = "Move Down" })
+-- map("v", "<A-k>", ":m '<-2<cr>gv=gv", { desc = "Move Up" })
 
 -- Opposite behavior of n and N
 map("n", "n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Next Search Result" })
@@ -147,7 +158,7 @@ map("n", "[e", diagnostic_goto(false, "ERROR"), { desc = "Prev Error" })
 -- Code/LSP
 map("n", "<leader>cl", "<cmd>LspInfo<cr>", { desc = "LSP Info" })
 map("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action" })
-map("n", "<leader>cr", vim.lsp.buf.rename, { desc = "Rename" })
+map("n", "<leader>cn", vim.lsp.buf.rename, { desc = "LSP buffer Rename" })
 map("n", "gd", function() require("telescope.builtin").lsp_definitions({ reuse_win = true }) end, { desc = "Goto Definition" })
 map("n", "gr", "<cmd>Telescope lsp_references<cr>", { desc = "Goto References" })
 map("n", "gD", vim.lsp.buf.declaration, { desc = "Goto Declaration" })

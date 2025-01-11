@@ -35,7 +35,7 @@ return {
                 auto_trigger = true,
                 keymap = {
                     accept = "<M-l>",
-                    accept_line = "<M-h>",
+                    accept_line = "<M-;>",
                     next = "<M-]>",
                     prev = "<M-[>",
                     dismiss = "<C-e>",
