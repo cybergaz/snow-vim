@@ -184,15 +184,15 @@ return {
         end,
     },
 
-    {
-        "catppuccin/nvim",
-        lazy = true,
-        event = "BufReadPost",
-        name = "catppuccin",
-        opts = {
-            transparent = true,
-        },
-    },
+    -- {
+    --     "catppuccin/nvim",
+    --     lazy = true,
+    --     event = "BufReadPost",
+    --     name = "catppuccin",
+    --     opts = {
+    --         transparent = true,
+    --     },
+    -- },
 
     -- {
     --     "folke/tokyonight.nvim",
