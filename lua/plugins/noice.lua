@@ -39,7 +39,7 @@ return {
         },
         presets = {
             bottom_search = false,
-            lsp_doc_border = true,
+            lsp_doc_border = false,
             command_palette = true,
             long_message_to_split = true,
             inc_rename = true,
@@ -53,7 +53,7 @@ return {
     { "<leader>na", function() require("noice").cmd("all") end, desc = "Noice All" },
     { "<leader>nd", function() require("noice").cmd("dismiss") end, desc = "Dismiss All" },
     { "<leader>nt", function() require("noice").cmd("telescope") end, desc = "Noice Telescope" },
-    { "<c-f>", function() if not require("noice.lsp").scroll(4) then return "<c-f>" end end, silent = true, expr = true, desc = "Scroll Forward", mode = {"i", "n", "s"} },
-    { "<c-b>", function() if not require("noice.lsp").scroll(-4) then return "<c-b>" end end, silent = true, expr = true, desc = "Scroll Backward", mode = {"i", "n", "s"}},
+    -- { "<c-f>", function() if not require("noice.lsp").scroll(4) then return "<c-f>" end end, silent = true, expr = true, desc = "Scroll Forward", mode = {"i", "n", "s"} },
+    -- { "<c-b>", function() if not require("noice.lsp").scroll(-4) then return "<c-b>" end end, silent = true, expr = true, desc = "Scroll Backward", mode = {"i", "n", "s"}},
   },
 }

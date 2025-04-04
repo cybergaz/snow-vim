@@ -1,0 +1,1 @@
+{"rdc":{"body":["const ${1:name} = () => {","    return (","        <div>","            ${2:content}","        <\/div>","    )","}","","export default ${1:name}"],"prefix":"rdc"}}

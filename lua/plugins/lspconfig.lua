@@ -28,36 +28,55 @@ return {
 
         -- setting its value to true helps in toggling inlay_hints
         vim.lsp.inlay_hint.enable(true)
+        -- vim.lsp.hover({ buffer = "rounded" })
 
         -- Diagnostics
         vim.diagnostic.config({
-            signs = false,
+            signs = {
+                severity = { min = "ERROR" },
+            },
             underline = true,
             update_in_insert = false,
-            -- severity_sort = true,
+            severity_sort = true,
+
             virtual_text = {
-                spacing = 6,
+                spacing = 5,
                 source = "if_many",
                 prefix = "●",
+                current_line = false,
+                severity = { max = "WARN" },
+            },
+
+            virtual_lines = {
+                current_line = true,
+                severity = { min = "WARN" },
+            },
+
+            float = {
+                focusable = true,
+                -- style = "minimal",
+                border = "rounded",
+                -- source = true,
+                -- header = "",
             },
         })
 
-        local border = {
-            { "╭", "Comment" },
-            { "─", "Comment" },
-            { "╮", "Comment" },
-            { "│", "Comment" },
-            { "╯", "Comment" },
-            { "─", "Comment" },
-            { "╰", "Comment" },
-            { "│", "Comment" },
-        }
+        -- local border = {
+        --     { "╭", "Comment" },
+        --     { "─", "Comment" },
+        --     { "╮", "Comment" },
+        --     { "│", "Comment" },
+        --     { "╯", "Comment" },
+        --     { "─", "Comment" },
+        --     { "╰", "Comment" },
+        --     { "│", "Comment" },
+        -- }
 
         -- LSP settings (for overriding per client)
-        local handlers = {
-            ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = border }),
-            ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = border }),
-        }
+        -- local handlers = {
+        --     ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = border }),
+        --     ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = border }),
+        -- }
 
         local capabilities = require("blink.cmp").get_lsp_capabilities()
 
@@ -135,5 +154,7 @@ return {
             },
             handlers = handlers,
         })
+
+        lspconfig.jdtls.setup({ cmd = { "jdtls" } })
     end,
 }

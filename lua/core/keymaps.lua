@@ -26,9 +26,17 @@ map({ "n" }, "S", '"_S')
 map({ "n" }, "xl", '"_dd')
 
 -- start/end of line
-map({ "n", "x" }, "e", "$")
-map({ "n", "x" }, "E", "^")
-map({ "n", "x" }, "B", "^")
+map({ "n", "x" }, "e", function()
+    local init_col = vim.fn.col(".")
+    vim.cmd("norm! $")
+    if init_col == vim.fn.col(".") then
+        vim.cmd("norm! ^")
+    end
+end)
+-- temporarily disabling A for 'e' practice
+map({ "n" }, "A", '<cmd>lua require("notify")("use \'ea\' instead", "warn") <cr>')
+-- map({ "n", "x" }, "E", "$")
+-- map({ "n", "x" }, "B", "^")
 
 -- do not yank with visual paste
 map("x", "p", "P", { desc = "no yank on select-paste " })
@@ -42,17 +50,20 @@ map("i", ".", ".<c-g>u")
 map("i", ";", ";<c-g>u")
 
 -- select all
-map({ "i", "n" }, "<C-a>", "<ESC>ggVG")
+map({ "n", "x" }, "<C-a>", "<ESC>ggVG")
 
--- writing and quiting
-map("n", "<leader>s", "<cmd> wa <cr>", { desc = "write all" })
-map("n", "<leader>S", "<cmd> wqa <cr>", { desc = "write and quit all" })
+-- reading, writing and quiting
+map("n", "<leader>s", "<cmd> update <cr>", { desc = "write current file" })
+map("n", "<leader>wa", "<cmd> wa <cr>", { desc = "write all files" })
+map("n", "<leader>wo", "<cmd> wqa <cr>", { desc = "write and quit all" })
 map({ "n" }, "<leader>wn", "<cmd> qa! <cr>", { desc = "quit all without saving" })
 -- map({ "n", "i" }, "<C-s>", "<cmd> wqa <cr>")
 -- map({ "n", "i" }, "<C-q>", "<cmd> qa! <cr>")
+map("n", "<leader>r", "<cmd>e<cr>", { desc = "reload current buffer" })
 
 -- find and replace & quickfix
 map({ "n" }, "?", ":%s/", { desc = "Find and replace in current file", silent = false })
+map({ "v" }, "?", ":s/", { desc = "Find and replace selected region", silent = false })
 map({ "n" }, "<leader>?", ":cdo %s//gc | update", { desc = "Find and replace in quickfix list", silent = false })
 map("n", "]q", "<cmd>cnext<cr>", { desc = "Next Quickfix" })
 map("n", "[q", "<cmd>cprev<cr>", { desc = "Prev Quickfix" })
@@ -61,14 +72,14 @@ map("n", "[q", "<cmd>cprev<cr>", { desc = "Prev Quickfix" })
 map({ "n", "x", "o", "v" }, "|", "%", { desc = "Teleport between braces" })
 
 -- operation on selected lines
-map({ "n", "v" }, "mm", ":'<,'>norm ", { desc = "Operation on selected lines", silent = false })
+map({ "v" }, "mm", ":norm ", { desc = "Operation on selected lines", silent = false })
 
 -- delete strings with backspace (require mini.ai)
 map("n", "<BS>", '"_ci"')
 
 -- Buffers
-map("n", "<M-h>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
-map("n", "<M-l>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
+-- map("n", "<A-h>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
+-- map("n", "<A-l>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
 map("n", "<leader>ww", "<cmd>bdelete!<cr>", { desc = "Delete Buffer" })
 map("n", "<C-x>", "<cmd>bdelete!<cr>", { desc = "Delete Buffer" })
 map("n", "<leader>bc", function()
@@ -100,10 +111,10 @@ map("n", "<leader>-", "<cmd>split<cr>", { desc = "split window below", remap = t
 map("n", "<leader>|", "<cmd>vsplit<cr>", { desc = "split window right", remap = true })
 
 -- Move to window using the <ctrl> hjkl keys
-map("n", "<C-h>", "<cmd>wincmd h<cr>", { desc = "Go to left window", remap = true })
-map("n", "<C-j>", "<cmd>wincmd j<cr>", { desc = "Go to lower window", remap = true })
-map("n", "<C-k>", "<cmd>wincmd k<cr>", { desc = "Go to upper window", remap = true })
-map("n", "<C-l>", "<cmd>wincmd l<cr>", { desc = "Go to right window", remap = true })
+map("n", "<A-h>", "<cmd>wincmd h<cr>", { desc = "Go to left window", remap = true })
+map("n", "<A-j>", "<cmd>wincmd j<cr>", { desc = "Go to lower window", remap = true })
+map("n", "<A-k>", "<cmd>wincmd k<cr>", { desc = "Go to upper window", remap = true })
+map("n", "<A-l>", "<cmd>wincmd l<cr>", { desc = "Go to right window", remap = true })
 
 -- Resize window using <ctrl> arrow keys
 map("n", "<C-Up>", "<cmd>resize +2<cr>", { desc = "Increase Window Height" })
@@ -112,8 +123,15 @@ map("n", "<C-Left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease Window Wi
 map("n", "<C-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase Window Width" })
 
 -- scroll down/up
-map({ "n", "v" }, "<A-j>", "3j", { desc = "Scroll Down" })
-map({ "n", "v" }, "<A-k>", "3k", { desc = "Scroll Up" })
+map({ "n", "v" }, "<C-j>", "5j", { desc = "Scroll Down" })
+map({ "n", "v" }, "<C-k>", "5k", { desc = "Scroll Up" })
+map({ "n", "v" }, "<C-f>", "5j", { desc = "Scroll Down" })
+map({ "n", "v" }, "<C-d>", "5k", { desc = "Scroll Up" })
+-- disable c-j c-k in different mode
+map({ "i" }, "<C-j>", "", { desc = "does nothing" })
+map({ "i" }, "<C-k>", "", { desc = "does nothing" })
+map({ "n", "x" }, "<C-l>", "", { desc = "does nothing" })
+map({ "n", "x", "i" }, "<C-h>", "", { desc = "does nothing" })
 
 -- Move Lines
 -- map("n", "<A-j>", "<cmd>m .+1<cr>==", { desc = "Move Down" })
@@ -149,6 +167,21 @@ local diagnostic_goto = function(next, severity)
         go({ severity = severity })
     end
 end
+
+map('n', '<leader>d', function()
+  vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })
+  vim.lsp.buf.code_action()
+end, { desc = 'Next error and code action' })
+-- perform only if cursor actually moved to next error
+-- map('n', '<leader>d', function()
+--   local before_pos = vim.api.nvim_win_get_cursor(0) -- Get current position
+--   vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })
+--   local after_pos = vim.api.nvim_win_get_cursor(0) -- Get new position
+--   -- Check if cursor actually moved
+--   if before_pos[1] ~= after_pos[1] or before_pos[2] ~= after_pos[2] then
+--     vim.lsp.buf.code_action()
+--   end
+-- end, { desc = 'Next error and code action' })
 map("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
 map("n", "]d", diagnostic_goto(true), { desc = "Next Diagnostic" })
 map("n", "[d", diagnostic_goto(false), { desc = "Prev Diagnostic" })
@@ -157,7 +190,7 @@ map("n", "[e", diagnostic_goto(false, "ERROR"), { desc = "Prev Error" })
 
 -- Code/LSP
 map("n", "<leader>cl", "<cmd>LspInfo<cr>", { desc = "LSP Info" })
-map("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action" })
+map("n", "<leader>a", vim.lsp.buf.code_action, { desc = "Code Action" })
 map("n", "<leader>cn", vim.lsp.buf.rename, { desc = "LSP buffer Rename" })
 map("n", "gd", function() require("telescope.builtin").lsp_definitions({ reuse_win = true }) end, { desc = "Goto Definition" })
 map("n", "gr", "<cmd>Telescope lsp_references<cr>", { desc = "Goto References" })

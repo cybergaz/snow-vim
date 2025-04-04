@@ -4,6 +4,7 @@ vim.g.maplocalleader = " "
 local opt = vim.opt
 
 opt.autowrite = true -- Enable auto write
+-- opt.autoread = true
 opt.clipboard = vim.env.SSH_TTY and "" or "unnamedplus" -- Sync with system clipboard
 opt.conceallevel = 2 -- hide * markup for bold and italic, but not markers with substitutions
 opt.confirm = true -- Confirm to save changes before exiting modified buffer
@@ -36,16 +37,14 @@ opt.wrap = false -- Disable line wrap
 opt.smoothscroll = true
 -- opt.signcolumn = "number"
 
+-- opt.winborder = "rounded"
+
 -- Set tab width
 opt.tabstop = 4
 opt.shiftwidth = 4
 opt.autoindent = true
 opt.smartindent = true
 opt.expandtab = true -- Use spaces instead of tabs
-
-vim.diagnostic.config({
-    float = { border = "rounded" },
-})
 
 -- Fix markdown indentation settings
 vim.g.markdown_recommended_style = 0

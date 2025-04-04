@@ -61,7 +61,7 @@ return {
         { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find Files" },
         { "<leader>k", "<cmd>Telescope find_files<cr>", desc = "Find Files" },
         { "<leader>fo", "<cmd>Telescope oldfiles<cr>", desc = "Find Oldfiles (Recents)" },
-        { "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Live Grep" },
+        { "<leader>;", "<cmd>Telescope live_grep<cr>", desc = "Live Grep" },
         { "<leader>fw", "<cmd>Telescope grep_string<cr>", desc = "Find word under the cursor" },
         { "<leader>fb", "<cmd>Telescope buffers<cr>", desc = "Find Buffers" },
         { "<leader>j", "<cmd>Telescope buffers<cr>", desc = "Find Buffers" },

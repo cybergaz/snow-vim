@@ -106,3 +106,22 @@ autocmd("FileType", {
 --         end
 --     end,
 -- })
+
+-- make it 2 space indent for vyloo projects only
+vim.api.nvim_create_autocmd("BufReadPre", {
+    callback = function()
+        if string.find(vim.fn.expand("%:p"), "vyloo") then
+            vim.opt.shiftwidth = 2
+            vim.opt.tabstop = 2
+            vim.opt.expandtab = true
+        end
+    end,
+})
+
+-- auto-reload files when modified externally
+-- https://unix.stackexchange.com/a/383044
+-- vim.o.autoread = true
+-- vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "CursorHoldI", "FocusGained" }, {
+--     command = "if mode() != 'c' | checktime | endif",
+--     pattern = { "*" },
+-- })
