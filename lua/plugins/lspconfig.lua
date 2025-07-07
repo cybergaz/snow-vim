@@ -44,13 +44,14 @@ return {
                 source = "if_many",
                 prefix = "●",
                 current_line = false,
-                severity = { max = "WARN" },
+                -- severity = { max = "WARN" },
             },
 
-            virtual_lines = {
-                current_line = true,
-                severity = { min = "WARN" },
-            },
+            virtual_lines = false,
+            -- virtual_lines = {
+            --     current_line = true,
+            --     severity = { min = "WARN" },
+            -- },
 
             float = {
                 focusable = true,

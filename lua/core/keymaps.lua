@@ -26,7 +26,7 @@ map({ "n" }, "S", '"_S')
 map({ "n" }, "xl", '"_dd')
 
 -- start/end of line
-map({ "n", "x" }, "e", function()
+map({ "n", "x" }, "E", function()
     local init_col = vim.fn.col(".")
     vim.cmd("norm! $")
     if init_col == vim.fn.col(".") then
@@ -35,8 +35,8 @@ map({ "n", "x" }, "e", function()
 end)
 -- temporarily disabling A for 'e' practice
 map({ "n" }, "A", '<cmd>lua require("notify")("use \'ea\' instead", "warn") <cr>')
--- map({ "n", "x" }, "E", "$")
--- map({ "n", "x" }, "B", "^")
+map({ "n", "x" }, "e", "$")
+map({ "n", "x" }, "B", "^")
 
 -- do not yank with visual paste
 map("x", "p", "P", { desc = "no yank on select-paste " })
@@ -59,23 +59,23 @@ map("n", "<leader>wo", "<cmd> wqa <cr>", { desc = "write and quit all" })
 map({ "n" }, "<leader>wn", "<cmd> qa! <cr>", { desc = "quit all without saving" })
 -- map({ "n", "i" }, "<C-s>", "<cmd> wqa <cr>")
 -- map({ "n", "i" }, "<C-q>", "<cmd> qa! <cr>")
-map("n", "<leader>r", "<cmd>e<cr>", { desc = "reload current buffer" })
+map("n", "<leader>rl", "<cmd>e<cr>", { desc = "reload current buffer" })
 
 -- find and replace & quickfix
 map({ "n" }, "?", ":%s/", { desc = "Find and replace in current file", silent = false })
 map({ "v" }, "?", ":s/", { desc = "Find and replace selected region", silent = false })
-map({ "n" }, "<leader>?", ":cdo %s//gc | update", { desc = "Find and replace in quickfix list", silent = false })
+map({ "x" }, "/", "<Esc>/\\%V", { desc = "Search in selected region", silent = false })
+map({ "n" }, "<leader>?", ":cdo %s/", { desc = "Find and replace in quickfix list", silent = false })
+-- remember "g" is used for every occurance & "c" is used for CHOICE
 map("n", "]q", "<cmd>cnext<cr>", { desc = "Next Quickfix" })
 map("n", "[q", "<cmd>cprev<cr>", { desc = "Prev Quickfix" })
-
--- remapping % to 'tp'
-map({ "n", "x", "o", "v" }, "|", "%", { desc = "Teleport between braces" })
 
 -- operation on selected lines
 map({ "v" }, "mm", ":norm ", { desc = "Operation on selected lines", silent = false })
 
 -- delete strings with backspace (require mini.ai)
-map("n", "<BS>", '"_ci"')
+map("n", "<BS>", "ciq", { remap = true })
+-- map("n", "<BS>", '"_ci"')
 
 -- Buffers
 -- map("n", "<A-h>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
@@ -93,9 +93,10 @@ map("n", "<leader>bc", function()
 end, { desc = "Delete all but current buffer" })
 -- map({ "i", "v", "n" }, "<C-w>", "<cmd>lua require('harpoon'):list():remove()<cr><cmd>bdelete!<cr>")
 
--- better up/down
+-- better j/k
 map({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { expr = true })
 map({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { expr = true })
+map({ "n" }, "J", "mzJ`z:delmarks z<cr>")
 
 -- better indenting
 map("v", "<", "<gv")
@@ -104,6 +105,7 @@ map("v", ">", ">gv")
 -- commenting
 map("n", "gco", "o<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add Comment Below" })
 map("n", "gcO", "O<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add Comment Above" })
+map("n", "ycc", "yygccp", { desc = "Duplicate & Comment current line", remap = true })
 
 -- windows
 map("n", "<leader>wd", "<cmd>close<cr>", { desc = "delete window", remap = true })
@@ -130,8 +132,13 @@ map({ "n", "v" }, "<C-d>", "5k", { desc = "Scroll Up" })
 -- disable c-j c-k in different mode
 map({ "i" }, "<C-j>", "", { desc = "does nothing" })
 map({ "i" }, "<C-k>", "", { desc = "does nothing" })
-map({ "n", "x" }, "<C-l>", "", { desc = "does nothing" })
-map({ "n", "x", "i" }, "<C-h>", "", { desc = "does nothing" })
+-- map({ "n", "x" }, "<C-l>", "", { desc = "does nothing" })
+-- map({ "n", "x", "i" }, "<C-h>", "", { desc = "does nothing" })
+
+-- remapping % for easier access
+map({ "n", "x", "o", "v" }, "\\", "%", { desc = "Teleport between braces", remap = true })
+map({ "n", "x", "o", "v" }, "<C-l>", "%", { desc = "Teleport between braces", remap = true })
+map({ "n", "x", "o", "v" }, "<C-h>", "%", { desc = "Teleport between braces", remap = true })
 
 -- Move Lines
 -- map("n", "<A-j>", "<cmd>m .+1<cr>==", { desc = "Move Down" })
@@ -168,25 +175,47 @@ local diagnostic_goto = function(next, severity)
     end
 end
 
-map('n', '<leader>d', function()
+map('n', '<leader>D', function()
   vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })
   vim.lsp.buf.code_action()
 end, { desc = 'Next error and code action' })
--- perform only if cursor actually moved to next error
--- map('n', '<leader>d', function()
---   local before_pos = vim.api.nvim_win_get_cursor(0) -- Get current position
---   vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })
---   local after_pos = vim.api.nvim_win_get_cursor(0) -- Get new position
---   -- Check if cursor actually moved
---   if before_pos[1] ~= after_pos[1] or before_pos[2] ~= after_pos[2] then
---     vim.lsp.buf.code_action()
---   end
--- end, { desc = 'Next error and code action' })
+
 map("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
+map("n", "<leader>d", diagnostic_goto(true, "ERROR"), { desc = "Next Error" })
 map("n", "]d", diagnostic_goto(true), { desc = "Next Diagnostic" })
 map("n", "[d", diagnostic_goto(false), { desc = "Prev Diagnostic" })
 map("n", "]e", diagnostic_goto(true, "ERROR"), { desc = "Next Error" })
 map("n", "[e", diagnostic_goto(false, "ERROR"), { desc = "Prev Error" })
+
+function toggle_diagnostics()
+    if vim.diagnostic.config().virtual_lines then
+        vim.diagnostic.config({
+            virtual_text = {
+                spacing = 5,
+                source = "if_many",
+                prefix = "●",
+                current_line = false,
+                severity = { max = "ERROR" },
+            },
+            virtual_lines = false,
+        })
+    else
+        vim.diagnostic.config({
+            virtual_text = {
+                spacing = 5,
+                source = "if_many",
+                prefix = "●",
+                current_line = false,
+                severity = { max = "WARN" },
+            },
+            virtual_lines = {
+                current_line = true,
+                severity = { min = "WARN" },
+            },
+        })
+    end
+end
+vim.keymap.set("n", "<leader>tl", "<cmd>lua toggle_diagnostics()<cr>", { desc = "Toggle Virtual Lines" })
 
 -- Code/LSP
 map("n", "<leader>cl", "<cmd>LspInfo<cr>", { desc = "LSP Info" })
@@ -206,7 +235,7 @@ map( "n", "<leader>hi", "<cmd>lua vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hi
 -- stylua: ignore end
 
 -- toggle options
-map("n", "<leader>ud", function()
+map("n", "<leader>td", function()
     if vim.diagnostic.is_enabled then
         enabled = vim.diagnostic.is_enabled()
     elseif vim.diagnostic.is_disabled then
@@ -222,9 +251,9 @@ map("n", "<leader>ud", function()
         require("notify")("Diagnostics Disabled", "info", { title = "Diagnostics" })
     end
 end, { desc = "Toggle diagnostics" })
-map("n", "<leader>us", function()
+map("n", "<leader>ts", function()
     vim.o.spell = not vim.o.spell
 end, { desc = "Toggle spelling shecks" })
-map("n", "<leader>uw", function()
+map("n", "<leader>tw", function()
     vim.o.wrap = not vim.o.wrap
 end, { desc = "Toggle word wrap" })

@@ -158,6 +158,12 @@ return {
                     NoiceCmdlinePopupBorderSearch = { fg = "#50505e" },
                     -- NoiceCmdlinePopup = { fg = "" },
 
+                    -- Flash
+                    FlashMatch = { fg = "#3f4147", bg = "none" },
+                    FlashCurrent = { fg = "#ffffff", bg = "none" },
+                    FlashLabel = { fg = "#579af8", bg = "none", bold = true },
+                    FlashBackdrop = { fg = "#42444c", bg = "none" },
+
                     -- Nvim Notify
                     -- NotifyDEBUGBody = { fg = "#edf1f5" },
                     -- NotifyDEBUGBorder = { fg = "#50505e" },
@@ -185,6 +191,17 @@ return {
             vim.cmd("colorscheme cyberdream") -- set the colorscheme
         end,
     },
+
+    -- {
+    --     "Yazeed1s/oh-lucy.nvim",
+    --     lazy = false,
+    --     priority = 1000,
+    --     config = function()
+    --         vim.g.oh_lucy_transparent_background = true
+    --         vim.g.oh_lucy_evening_transparent_background = true
+    --         vim.cmd([[colorscheme oh-lucy]])
+    --     end,
+    -- },
 
     -- {
     --     "catppuccin/nvim",

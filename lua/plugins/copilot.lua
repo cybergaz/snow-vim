@@ -5,7 +5,7 @@ return {
     build = ":Copilot auth",
     keys = {
         {
-            "<leader>uc",
+            "<leader>tc",
             function()
                 local status = require("copilot.client").is_disabled()
                 if status then
@@ -34,8 +34,8 @@ return {
             suggestion = {
                 auto_trigger = true,
                 keymap = {
-                    accept = "<C-a>",
-                    accept_line = "<C-l>",
+                    accept = "<C-l>",
+                    accept_line = "<C-;>",
                     next = "<M-]>",
                     prev = "<M-[>",
                     dismiss = "<C-e>",

@@ -37,11 +37,12 @@ opt.wrap = false -- Disable line wrap
 opt.smoothscroll = true
 -- opt.signcolumn = "number"
 
--- opt.winborder = "rounded"
+opt.winborder = "rounded"
+-- opt.iskeyword:append("-") -- Treat dash as part of a word
 
 -- Set tab width
-opt.tabstop = 4
-opt.shiftwidth = 4
+opt.tabstop = 2
+opt.shiftwidth = 2
 opt.autoindent = true
 opt.smartindent = true
 opt.expandtab = true -- Use spaces instead of tabs
