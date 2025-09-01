@@ -2,7 +2,9 @@ return {
     "saghen/blink.cmp",
     event = "InsertEnter",
     enabled = true,
-    build = "cargo build --release",
+    -- use a release tag to download pre-built binaries
+    version = "1.*",
+    -- build = "cargo build --release",
     -- lazy = false, -- lazy loading handled internally
     dependencies = "rafamadriz/friendly-snippets",
 
@@ -104,6 +106,7 @@ return {
 
             -- ["<CR>"] = { "select_and_accept" },
             ["<CR>"] = { "accept", "fallback" },
+            ["<C-CR>"] = { "accept", "fallback" },
             -- ["<S-CR>"] = { "cancel" },
 
             -- ["<Tab>"] = { "select_next", "fallback" },

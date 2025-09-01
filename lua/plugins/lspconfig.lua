@@ -117,14 +117,14 @@ return {
         }
 
         lspconfig.ts_ls.setup({
-            settings = {
-                typescript = {
-                    inlayHints = inlayHints,
-                },
-                javascript = {
-                    inlayHints = inlayHints,
-                },
-            },
+            -- settings = {
+            --     typescript = {
+            --         inlayHints = inlayHints,
+            --     },
+            --     -- javascript = {
+            --     --     inlayHints = inlayHints,
+            --     -- },
+            -- },
             capabilities = capabilities,
             handlers = handlers,
         })
