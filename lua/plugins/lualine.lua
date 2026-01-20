@@ -34,25 +34,71 @@ return {
                 },
                 lualine_b = {
                     { "branch", icon = "", padding = { left = 2, right = 1 }, color = { fg = "#1abc9c" } },
-                    { "grapple", separator = "", padding = { left = 2, right = 1 } },
+
+                    -- { "grapple", separator = "", padding = { left = 2, right = 1 } },
+
+                    -- buffer count
                     {
-                        "filename",
-                        path = 0,
-                        symbols = { modified = "+", readonly = "", unnamed = "", newfile = "" },
-                        padding = { left = 0, right = 3 },
-                        color = { fg = "#ffffff" },
-                    },
-                },
-                lualine_c = {
-                    -- "%=",
-                    { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
-                    {
-                        "filename",
-                        path = 1,
-                        symbols = { modified = "🖉", readonly = "🛇", unnamed = "" },
-                        padding = { left = 0, right = 1 },
+                        function()
+                            local count = #vim.fn.getbufinfo({ buflisted = 1 })
+                            return " 󰂺 " .. count
+                        end,
+                        padding = { left = 1, right = 1 },
                         color = { fg = colors.grey },
                     },
+
+                    -- {
+                    --     "filename",
+                    --     path = 0,
+                    --     symbols = { modified = "+", readonly = "", unnamed = "", newfile = "" },
+                    --     padding = { left = 0, right = 3 },
+                    --     color = { fg = "#ffffff" },
+                    -- },
+                },
+                lualine_c = {
+                    -- "%=", -- center separator
+
+                    { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
+                    -- PATH (gray) FILENAME (white)
+                    {
+                        function()
+                            local path = vim.fn.expand("%:~:.:h")
+                            local file = vim.fn.expand("%:t")
+
+                            local modified = vim.bo.modified and " 🖉" or ""
+                            local readonly = vim.bo.readonly and " 🛇" or ""
+
+                            if path == "." or path == "" then
+                                return table.concat({
+                                    "%#LualineFile#",
+                                    file,
+                                    modified,
+                                    readonly,
+                                })
+                            end
+
+                            return table.concat({
+                                "%#LualinePath#",
+                                path .. "/",
+                                "%#LualineFile#",
+                                file,
+                                "%#LualineFileIcon#",
+                                modified,
+                                readonly,
+                            })
+                        end,
+                        separator = "",
+                        padding = { left = 0, right = 1 },
+                    },
+
+                    -- {
+                    --     "filename",
+                    --     path = 1,
+                    --     symbols = { modified = "🖉", readonly = "🛇", unnamed = "" },
+                    --     padding = { left = 0, right = 1 },
+                    --     color = { fg = colors.grey },
+                    -- },
+
                     -- {
                     --   function()
                     --     return require("nvim-navic").get_location()
@@ -119,5 +165,11 @@ return {
 
             extensions = { "lazy", "mason", "neo-tree" },
         }
+    end,
+    config = function(_, opts)
+        require("lualine").setup(opts)
+        vim.api.nvim_set_hl(0, "LualinePath", { fg = "#7b8496", bg = "NONE" })
+        vim.api.nvim_set_hl(0, "LualineFile", { fg = "#ffffff", bg = "NONE", bold = true })
+        vim.api.nvim_set_hl(0, "LualineFileIcon", { fg = "#ffffff", bg = "NONE", bold = false })
     end,
 }

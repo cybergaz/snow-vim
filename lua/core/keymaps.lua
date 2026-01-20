@@ -34,7 +34,7 @@ map({ "n", "x" }, "E", function()
     end
 end)
 -- temporarily disabling A for 'e' practice
-map({ "n" }, "A", '<cmd>lua require("notify")("use \'ea\' instead", "warn") <cr>')
+-- map({ "n" }, "A", '<cmd>lua require("notify")("use \'ea\' instead", "warn") <cr>')
 map({ "n", "x" }, "e", "$")
 map({ "n", "x" }, "B", "^")
 
@@ -65,8 +65,8 @@ map("n", "<leader>rl", "<cmd>e<cr>", { desc = "reload current buffer" })
 map({ "n" }, "?", ":%s/", { desc = "Find and replace in current file", silent = false })
 map({ "v" }, "?", ":s/", { desc = "Find and replace selected region", silent = false })
 map({ "x" }, "/", "<Esc>/\\%V", { desc = "Search in selected region", silent = false })
-map({ "n" }, "<leader>?", ":cdo %s/", { desc = "Find and replace in quickfix list", silent = false })
 -- remember "g" is used for every occurance & "c" is used for CHOICE
+map({ "n" }, "<leader>?", ":cdo %s/", { desc = "Find and replace in quickfix list", silent = false })
 map("n", "]q", "<cmd>cnext<cr>", { desc = "Next Quickfix" })
 map("n", "[q", "<cmd>cprev<cr>", { desc = "Prev Quickfix" })
 
@@ -113,10 +113,12 @@ map("n", "<leader>-", "<cmd>split<cr>", { desc = "split window below", remap = t
 map("n", "<leader>|", "<cmd>vsplit<cr>", { desc = "split window right", remap = true })
 
 -- Move to window using the <ctrl> hjkl keys
-map("n", "<A-h>", "<cmd>wincmd h<cr>", { desc = "Go to left window", remap = true })
-map("n", "<A-j>", "<cmd>wincmd j<cr>", { desc = "Go to lower window", remap = true })
-map("n", "<A-k>", "<cmd>wincmd k<cr>", { desc = "Go to upper window", remap = true })
-map("n", "<A-l>", "<cmd>wincmd l<cr>", { desc = "Go to right window", remap = true })
+-- map("n", "<A-h>", "<cmd>wincmd h<cr>", { desc = "Go to left window", remap = true })
+-- map("n", "<A-j>", "<cmd>wincmd j<cr>", { desc = "Go to lower window", remap = true })
+-- map("n", "<A-k>", "<cmd>wincmd k<cr>", { desc = "Go to upper window", remap = true })
+-- map("n", "<A-l>", "<cmd>wincmd l<cr>", { desc = "Go to right window", remap = true })
+map("n", "<S-l>", "<C-w>w", { desc = "Next window", remap = true })
+map("n", "<S-h>", "<C-w>W", { desc = "Previous window", remap = true })
 
 -- Resize window using <ctrl> arrow keys
 map("n", "<C-Up>", "<cmd>resize +2<cr>", { desc = "Increase Window Height" })
@@ -257,3 +259,24 @@ end, { desc = "Toggle spelling shecks" })
 map("n", "<leader>tw", function()
     vim.o.wrap = not vim.o.wrap
 end, { desc = "Toggle word wrap" })
+
+-- misc
+map("n", "<leader>rs", function()
+    vim.system({
+        "rsync",
+        "-az",
+        "--delete",
+        "/home/gaz/workspace/aiexch/aiexch-backend/src/",
+        "aiexch:/home/ubuntu/aiexch-backend/src/",
+    }, { text = true }, function(obj)
+        if obj.code == 0 then
+            vim.schedule(function()
+                vim.notify("Synced aiexch-backend/src to EC2", vim.log.levels.INFO)
+            end)
+        else
+            vim.schedule(function()
+                vim.notify("Rsync failed:\n" .. obj.stderr, vim.log.levels.ERROR)
+            end)
+        end
+    end)
+end, { desc = "sync changes to EC2 (async)" })

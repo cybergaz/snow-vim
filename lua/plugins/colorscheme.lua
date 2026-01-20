@@ -164,6 +164,9 @@ return {
                     FlashLabel = { fg = "#579af8", bg = "none", bold = true },
                     FlashBackdrop = { fg = "#42444c", bg = "none" },
 
+                    -- Flutter Tools
+                    FlutterGuide = { fg = "#5B5F6C" },
+
                     -- Nvim Notify
                     -- NotifyDEBUGBody = { fg = "#edf1f5" },
                     -- NotifyDEBUGBorder = { fg = "#50505e" },

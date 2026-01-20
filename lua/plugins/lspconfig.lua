@@ -2,28 +2,28 @@ return {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
-        "williamboman/mason.nvim",
-        "williamboman/mason-lspconfig.nvim",
+        "mason-org/mason.nvim",
+        { "mason-org/mason-lspconfig.nvim", opts = {} },
         "saghen/blink.cmp",
         -- "hrsh7th/cmp-nvim-lsp",
     },
-    opts = function()
-        return {
-            -- inlay_hints = {
-            --     enabled = false,
-            --     exclude = {}, -- filetypes for which you don't want to enable inlay hints
-            -- },
-            -- codelens = {
-            --     enabled = false,
-            -- },
-            -- -- Enable lsp cursor word highlighting
-            -- document_highlight = {
-            --     enabled = true,
-            -- },
-        }
-    end,
+    opts = {
+        -- automatic_enable = false,
+
+        -- inlay_hints = {
+        --     enabled = false,
+        --     exclude = {}, -- filetypes for which you don't want to enable inlay hints
+        -- },
+        -- codelens = {
+        --     enabled = false,
+        -- },
+        -- -- Enable lsp cursor word highlighting
+        -- document_highlight = {
+        --     enabled = true,
+        -- },
+    },
     config = function(_, opts)
-        local lspconfig = require("lspconfig")
+        -- local lspconfig = vim.lsp.config()
         -- local mason_registry = require("mason-registry")
 
         -- setting its value to true helps in toggling inlay_hints
@@ -84,15 +84,16 @@ return {
         -- Run setup for mason installed servers
         -- require("notify")("installed server", "info", { title = "lsp conf" })
         -- require("notify")(require("mason-lspconfig").get_installed_servers())
-        for _, server in pairs(require("mason-lspconfig").get_installed_servers()) do
-            -- ----------------------------------------------------
-            -- temporary fix for tsserver deprecation warning
-            -- if server == "tsserver" then
-            --     server = "ts_ls"
-            -- end
-            -- ----------------------------------------------------
-            lspconfig[server].setup({ capabilities = capabilities, handlers = handlers })
-        end
+        -- for _, server in pairs(require("mason-lspconfig").get_installed_servers()) do
+        --     -- ----------------------------------------------------
+        --     -- temporary fix for tsserver deprecation warning
+        --     -- if server == "tsserver" then
+        --     --     server = "ts_ls"
+        --     -- end
+        --     -- ----------------------------------------------------
+        --     vim.lsp.enable(server)
+        --     vim.lsp.config(server, { capabilities = capabilities, handlers = handlers })
+        -- end
 
         -- copilot fix for rust
         -- require("lspconfig").clangd.setup({
@@ -116,21 +117,22 @@ return {
             includeInlayEnumMemberValueHints = true,
         }
 
-        lspconfig.ts_ls.setup({
-            -- settings = {
-            --     typescript = {
-            --         inlayHints = inlayHints,
-            --     },
-            --     -- javascript = {
-            --     --     inlayHints = inlayHints,
-            --     -- },
-            -- },
+        --typescript and javascript lsp
+        vim.lsp.config("ts_ls", {
+            settings = {
+                typescript = {
+                    inlayHints = inlayHints,
+                },
+                -- javascript = {
+                --     inlayHints = inlayHints,
+                -- },
+            },
             capabilities = capabilities,
             handlers = handlers,
         })
 
         -- Go
-        lspconfig.gopls.setup({
+        vim.lsp.config("gopls", {
             settings = {
                 gopls = {
                     completeUnimported = true,
@@ -144,8 +146,28 @@ return {
             handlers = handlers,
         })
 
+        -- dart
+        vim.lsp.enable("dartls")
+        vim.lsp.config("dartls", {
+            cmd = { "dart", "language-server", "--protocol=lsp" },
+            filetypes = { "dart" },
+            init_options = {
+                closingLabels = true,
+                flutterOutline = true,
+                onlyAnalyzeProjectsWithOpenFiles = true,
+                outline = true,
+                suggestFromUnimportedLibraries = true,
+            },
+            settings = {
+                dart = {
+                    completeFunctionCalls = true,
+                    showTodos = true,
+                },
+            },
+        })
+
         -- swift
-        lspconfig.sourcekit.setup({
+        vim.lsp.config("sourcekit", {
             capabilities = {
                 workspace = {
                     didChangeWatchedFiles = {
@@ -156,6 +178,10 @@ return {
             handlers = handlers,
         })
 
-        lspconfig.jdtls.setup({ cmd = { "jdtls" } })
+        -- java lsp
+        vim.lsp.config("jdtls", { cmd = { "jdtls" } })
+
+        -- qml lsp
+        vim.lsp.enable("qmlls")
     end,
 }

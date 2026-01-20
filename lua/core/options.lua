@@ -12,7 +12,8 @@ opt.cursorline = false -- Enable highlighting of the current line
 opt.ignorecase = true -- Ignore case
 opt.smartcase = true -- Don't ignore case with capitals
 opt.inccommand = "nosplit" -- preview incremental substitute
-opt.list = true -- Show some invisible characters (tabs...
+opt.list = false -- Show some invisible characters (like tabs...)
+-- opt.listchars = { tab = "▸ ", space = "·", trail = "•", extends = "»", precedes = "«", nbsp = "␣" } -- Characters to use for invisible characters
 opt.mouse = "a" -- Enable mouse mode "a" for all modes and "nvi" you're smart enough
 opt.number = true -- Print line number
 opt.relativenumber = true -- Relative line numbers

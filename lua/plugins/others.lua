@@ -181,13 +181,13 @@ return {
     {
         "mistweaverco/kulala.nvim",
         keys = {
-            { "<leader>rs", desc = "Send request" },
-            { "<leader>ra", desc = "Send all requests" },
-            { "<leader>rb", desc = "Open scratchpad" },
+            -- { "<leader>rs", desc = "Send request" },
+            -- { "<leader>ra", desc = "Send all requests" },
+            -- { "<leader>rb", desc = "Open scratchpad" },
         },
         ft = { "http", "rest" },
         opts = {
-            global_keymaps = true,
+            global_keymaps = false,
             global_keymaps_prefix = "<leader>r",
             kulala_keymaps_prefix = "",
             kulala_keymaps = {
@@ -248,45 +248,62 @@ return {
     ----------------------------------------------------------------------------------------
     -- Flash
     ----------------------------------------------------------------------------------------
-    {
-        "folke/flash.nvim",
-        event = "VeryLazy",
-        opts = {
-            highlight = {
-                -- show a backdrop with hl FlashBackdrop
-                backdrop = true,
-                -- Highlight the search matches
-                matches = false,
-                -- extmark priority
-                priority = 5000,
-                groups = {
-                    match = "FlashMatch",
-                    current = "FlashCurrent",
-                    backdrop = "FlashBackdrop",
-                    label = "FlashLabel",
-                },
-            },
-        },
-        -- stylua: ignore start
-        keys = {
-            { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
-            { "S", false },
-            -- { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
-            { "r", false},
-            { "R", false },
-            { "<c-s>", false },
-        },
-    },
+    -- {
+    --     "folke/flash.nvim",
+    --     event = "VeryLazy",
+    --     opts = {
+    --         highlight = {
+    --             -- show a backdrop with hl FlashBackdrop
+    --             backdrop = true,
+    --             -- Highlight the search matches
+    --             matches = false,
+    --             -- extmark priority
+    --             priority = 5000,
+    --             groups = {
+    --                 match = "FlashMatch",
+    --                 current = "FlashCurrent",
+    --                 backdrop = "FlashBackdrop",
+    --                 label = "FlashLabel",
+    --             },
+    --         },
+    --     },
+    --     -- stylua: ignore start
+    --     keys = {
+    --         { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+    --         { "S", false },
+    --         -- { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+    --         { "r", false},
+    --         { "R", false },
+    --         { "<c-s>", false },
+    --     },
+    -- },
 
     -- {
-    --     "ibhagwan/fzf-lua",
-    --     -- optional for icon support
+    --     "A7Lavinraj/fyler.nvim",
     --     dependencies = { "nvim-tree/nvim-web-devicons" },
-    --     -- or if using mini.icons/mini.nvim
-    --     -- dependencies = { "echasnovski/mini.icons" },
-    --     opts = {},
+    --     branch = "stable",
+    --     lazy = false,
+    --     opts = {
+    --         integrations = {
+    --             icon = "nvim_web_devicons",
+    --         },
+    --         views = {
+    --             finder = {
+    --                 win = {
+    --                     kinds = {
+    --                         float = {
+    --                             height = "80%",
+    --                             width = "50%",
+    --                             top = "5%",
+    --                             left = "25%",
+    --                         },
+    --                     },
+    --                 },
+    --             },
+    --         },
+    --     },
     --     keys = {
-    --         { "<leader>fl", "<cmd>FzfLua files<cr>", desc = "Find files" },
+    --         { "<leader>E", "<Cmd>Fyler kind=float<Cr>", desc = "Open Fyler View" },
     --     },
     -- },
 }

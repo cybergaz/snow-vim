@@ -73,5 +73,18 @@ return {
         { "<leader>fgb", "<cmd>Telescope git_branches<cr>", desc = "Find Git Branches" },
         { "<leader>fgx", "<cmd>Telescope git_bcommits<cr>", desc = "Find Git Current Branch Commits" },
         { "<leader>fgs", "<cmd>Telescope git_stash<cr>", desc = "Find Git Stash Items" },
+        {
+            "<leader>fw",
+            function()
+                vim.cmd('normal! "vy')
+                local text = vim.fn.getreg("v")
+
+                require("telescope.builtin").grep_string({
+                    search = text,
+                })
+            end,
+            mode = "v",
+            desc = "Find visual selection",
+        },
     },
 }
