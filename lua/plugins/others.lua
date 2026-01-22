@@ -184,6 +184,15 @@ return {
             -- { "<leader>rs", desc = "Send request" },
             -- { "<leader>ra", desc = "Send all requests" },
             -- { "<leader>rb", desc = "Open scratchpad" },
+            {
+                "<CR>",
+                function()
+                    require("kulala").run()
+                end,
+                mode = { "n", "v" },
+                ft = { "http", "rest" },
+                desc = "Send request",
+            },
         },
         ft = { "http", "rest" },
         opts = {
