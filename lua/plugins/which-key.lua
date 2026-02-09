@@ -42,7 +42,7 @@ return {
             { "<leader>u", group = "toggle" },
             { "<leader>w", group = "windows" },
             { "<leader>x", group = "snippet" },
-            { "<leader>l", group = "Lazy" },
+            { "<leader>;", group = "Lazy" },
         },
     },
 }

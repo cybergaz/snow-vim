@@ -108,15 +108,15 @@ autocmd("FileType", {
 -- })
 
 -- make it 2 space indent for vyloo projects only
-vim.api.nvim_create_autocmd("BufReadPre", {
-    callback = function()
-        if string.find(vim.fn.expand("%:p"), "vyloo") then
-            vim.opt.shiftwidth = 2
-            vim.opt.tabstop = 2
-            vim.opt.expandtab = true
-        end
-    end,
-})
+-- vim.api.nvim_create_autocmd("BufReadPre", {
+--     callback = function()
+--         if string.find(vim.fn.expand("%:p"), "vyloo") then
+--             vim.opt.shiftwidth = 2
+--             vim.opt.tabstop = 2
+--             vim.opt.expandtab = true
+--         end
+--     end,
+-- })
 
 -- treat dash as part of a word in certain filetypes
 -- vim.api.nvim_create_autocmd("FileType", {

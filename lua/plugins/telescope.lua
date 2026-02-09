@@ -59,14 +59,13 @@ return {
         })
     end,
     keys = {
-        { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find Files" },
+        { "<leader>j", "<cmd>Telescope buffers<cr>", desc = "Find Buffers" },
         { "<leader>k", "<cmd>Telescope find_files<cr>", desc = "Find Files" },
+        { "<leader>l", "<cmd>Telescope live_grep<cr>", desc = "Live Grep" },
+        { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find Files" },
         { "<leader>fo", "<cmd>Telescope oldfiles<cr>", desc = "Find Oldfiles (Recents)" },
-        { "<leader>;", "<cmd>Telescope live_grep<cr>", desc = "Live Grep" },
-        { "<leader>lg", "<cmd>Telescope live_grep<cr>", desc = "Live Grep" },
         { "<leader>fw", "<cmd>Telescope grep_string<cr>", desc = "Find word under the cursor" },
         { "<leader>fb", "<cmd>Telescope buffers<cr>", desc = "Find Buffers" },
-        { "<leader>j", "<cmd>Telescope buffers<cr>", desc = "Find Buffers" },
         { "<leader>fd", "<cmd>Telescope diagnostics<cr>", desc = "Find diagnostics" },
         { "<leader>ft", "<cmd>Telescope<cr>", desc = "Other pickers..." },
         { "<leader>fgc", "<cmd>Telescope git_commits<cr>", desc = "Find Git Commmits" },

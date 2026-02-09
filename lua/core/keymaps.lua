@@ -11,19 +11,34 @@ local map = function(modes, lhs, rhs, opts)
     end
 end
 
+-- -------------------------------------------------------------
+-- modes : n -> normal mode, x -> all visual modes(x,v,s)
+-- -------------------------------------------------------------
+
 -- Clear search with <esc>
 map({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and Clear hlsearch" })
 
 -- do not yank with x, c, s
-map({ "n", "x" }, "x", '"_d')
-map({ "n" }, "xx", '"_dd')
-map({ "n" }, "X", '"_d$')
-map({ "x" }, "X", '"_X')
 map({ "n", "x" }, "c", '"_c')
 map({ "n", "x" }, "C", '"_C')
-map({ "x", "n" }, "s", '"_d')
-map({ "n" }, "S", '"_S')
-map({ "n" }, "xl", '"_dd')
+-- -----------------------------
+map({ "n", "x" }, "x", "c")
+map({ "n", "x" }, "X", "C")
+map({ "n" }, "xl", "cc")
+map({ "n" }, "xx", "cc")
+-- -----------------------------
+map({ "n", "x" }, "s", '"_d')
+map({ "n" }, "S", '"_d$')
+map({ "n" }, "sl", '"_dd')
+map({ "n" }, "ss", '"_dd')
+-- map({ "n", "x" }, "x", '"_d')
+-- map({ "n" }, "X", '"_d$')
+-- map({ "x" }, "X", '"_X')
+-- map({ "n", "x" }, "c", '"_c')
+-- map({ "n", "x" }, "C", '"_C')
+-- map({ "x", "n" }, "s", '"_d')
+-- map({ "n" }, "S", '"_S')
+-- map({ "n" }, "xl", '"_dd')
 
 -- start/end of line
 map({ "n", "x" }, "E", function()
@@ -74,7 +89,7 @@ map("n", "[q", "<cmd>cprev<cr>", { desc = "Prev Quickfix" })
 map({ "v" }, "mm", ":norm ", { desc = "Operation on selected lines", silent = false })
 
 -- delete strings with backspace (require mini.ai)
-map("n", "<BS>", "ciq", { remap = true })
+map("n", "<BS>", "viq", { remap = true })
 -- map("n", "<BS>", '"_ci"')
 
 -- Buffers
@@ -166,7 +181,7 @@ map("o", "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev Search Result
 -- stylua: ignore start
 
 -- lazy
-map("n", "<leader>llll", "<cmd>Lazy<cr>", { desc = "Lazy" })
+map("n", "<leader>;;;", "<cmd>Lazy<cr>", { desc = "Lazy" })
 
 -- diagnostic
 local diagnostic_goto = function(next, severity)

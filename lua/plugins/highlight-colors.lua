@@ -1,4 +1,7 @@
 return {
+    -- ---------------------------------------------------------------------------
+    -- Highlight Colors
+    -- ---------------------------------------------------------------------------
     {
         "brenoprata10/nvim-highlight-colors",
         cmd = { "HighlightColors" },
@@ -30,6 +33,10 @@ return {
             require("nvim-highlight-colors").turnOff()
         end,
     },
+
+    -- ---------------------------------------------------------------------------
+    -- Oklch Color Picker
+    -- ---------------------------------------------------------------------------
     {
         "eero-lehtinen/oklch-color-picker.nvim",
         event = "VeryLazy",

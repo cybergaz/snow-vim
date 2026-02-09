@@ -131,6 +131,9 @@ return {
             handlers = handlers,
         })
 
+        -- Rust
+        vim.lsp.enable("rust_analyzer")
+
         -- Go
         vim.lsp.config("gopls", {
             settings = {
