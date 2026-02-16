@@ -7,6 +7,19 @@ return {
 
     config = function()
         local ts = require("nvim-treesitter")
+        vim.notify = require("notify")
+
+        -- Ensure tree-sitter CLI exists
+        if vim.fn.executable("tree-sitter") == 0 then
+            vim.defer_fn(function()
+                vim.notify(
+                    "nvim-treesitter: 'tree-sitter' CLI not found in PATH.\nCan't proceed with the tree-sitter setup.",
+                    vim.log.levels.ERROR,
+                    { title = "nvim-treesitter" }
+                )
+            end, 1000) -- 1000 ms = 1 seconds
+            return
+        end
 
         local should_install = {
             "bash",
@@ -77,19 +90,10 @@ return {
                     return
                 end
 
-                vim.notify("Installing Tree-sitter parser for: " .. lang)
+                vim.notify("Installing Tree-sitter parser for: " .. lang, "info", { title = "nvim-treesitter" })
+
                 -- async install with reload
                 ts.install({ lang })
-                -- vim.schedule(function()
-                --     -- if vim.api.nvim_buf_is_valid(bufnr) then
-                --     -- -- retrigger FileType so highlight infra is ready
-                --     -- vim.cmd("doautocmd <nomodeline> FileType")
-                --     vim.treesitter.stop({ bufnr })
-                --     vim.notify("Starting treesitter for filetype: " .. lang)
-                --     vim.treesitter.start({ bufnr }, { lang })
-                --     vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-                --     -- end
-                -- end)
             end,
         })
     end,

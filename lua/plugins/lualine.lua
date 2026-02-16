@@ -40,8 +40,12 @@ return {
                     -- buffer count
                     {
                         function()
-                            local count = #vim.fn.getbufinfo({ buflisted = 1 })
-                            return " 󰂺 " .. count
+                            local buffer_count = #vim.fn.getbufinfo({ buflisted = 1 })
+                            local unsaved_buffer_count = require("core.utils").unsaved_buffers_count()
+                            return " 󰂺 "
+                                .. buffer_count
+                                .. "%#LualineUnsavedBuffers#"
+                                .. (unsaved_buffer_count > 0 and " +" .. unsaved_buffer_count .. "" or " ✔ ") -- icons  🖒
                         end,
                         padding = { left = 1, right = 1 },
                         color = { fg = colors.grey },
@@ -171,5 +175,6 @@ return {
         vim.api.nvim_set_hl(0, "LualinePath", { fg = "#7b8496", bg = "NONE" })
         vim.api.nvim_set_hl(0, "LualineFile", { fg = "#ffffff", bg = "NONE", bold = true })
         vim.api.nvim_set_hl(0, "LualineFileIcon", { fg = "#ffffff", bg = "NONE", bold = false })
+        vim.api.nvim_set_hl(0, "LualineUnsavedBuffers", { fg = "#19ffe8", bg = "NONE", bold = false })
     end,
 }
