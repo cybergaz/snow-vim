@@ -11,6 +11,7 @@ return {
                 sh = { "shfmt" },
                 -- jsonc = { "fixjson" },
                 swift = { "swiftformat" },
+                toml = { "taplo" },
             },
             formatters = {
                 injected = { options = { ignore_errors = true } },

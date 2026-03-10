@@ -30,7 +30,9 @@ return {
     },
     config = function()
         require("copilot").setup({
+
             enabled = true,
+
             suggestion = {
                 auto_trigger = true,
                 keymap = {
@@ -41,7 +43,23 @@ return {
                     dismiss = "<C-e>",
                 },
             },
-            panel = { enabled = true },
+
+            panel = {
+                enabled = true,
+                auto_refresh = false,
+                keymap = {
+                    jump_prev = "[[",
+                    jump_next = "]]",
+                    accept = "<CR>",
+                    refresh = "gr",
+                    open = "<C-;>",
+                },
+                layout = {
+                    position = "bottom", -- | top | left | right | bottom |
+                    ratio = 0.3,
+                },
+            },
+
             filetypes = {
                 markdown = true,
             },
